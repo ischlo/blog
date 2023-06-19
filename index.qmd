@@ -1,0 +1,18 @@
+---
+# title: "Blog"
+listing:
+  max-items: 10
+  image-align: right
+  # image-placeholder:
+  contents: posts
+  sort: "date desc"
+  type: default
+  categories: cloud
+  sort-ui: false
+  filter-ui: false
+  max-description-length: 50
+  date-format: short
+  fields: [title,categories,description,image]
+page-layout: full
+title-block-banner: false
+---
