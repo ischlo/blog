@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ivann Schlosser">
+
+<title>Ivann’s blog - Web scrapping in R</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="../../site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<script src="../../site_libs/jquery-1.12.4/jquery.min.js"></script>
+<link href="../../site_libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
+<script src="../../site_libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="../../site_libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
+<script src="../../site_libs/proj4-2.6.2/proj4.min.js"></script>
+<script src="../../site_libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="../../site_libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
+<script src="../../site_libs/leaflet-binding-2.1.2/leaflet.js"></script>
+
+
+<link rel="stylesheet" href="../../styles.scss">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Ivann’s blog</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/ischlo"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/irscar"><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Web scrapping in R</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">scrapping</div>
+                <div class="quarto-category">rstats</div>
+                <div class="quarto-category">mapping</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Ivann Schlosser </p>
+            </div>
+    </div>
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>Sometime, you can find interesting data for a project on the web, and quite often it will be possible to download the raw data set,like a spreadsheet, csv or json, for your own use. However, this is not always the case. And in these kind of cases, there is always the possibility to try web-scrapping. While it can seem like a lengthy extra step towards the realization of your intended idea, it can also give you the opportunity to develop a new skill, and understand better how websites work in general.<br>
+Web scrapping is generally legal, so you shouldn’t feel like you are doing something wrong when scrapping data. Occasionally, some web sites will have protection against it, but you still can manage to get what you want. This post will show an example of using the <a href="https://rvest.tidyverse.org"><strong>rvest</strong></a> package ( another great package from the <strong>tidyverse</strong> team) to scrap data from the website of <a href="https://guide.michelin.com/gb/en">michelin restaurants</a>. Their data is not accessible online in raw format, so we have a true real-world case in hands.</p>
+</section>
+<section id="set-up" class="level1">
+<h1>Set up</h1>
+<p>Let’s include the libraries needed for this task.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaflet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>and that’s it !</p>
+<p>Now we will investigate the websites content at <a href="https://guide.michelin.com/gb/en/restaurants">this</a> link (depending on which country you are connecting from, this page can have a different aspect and language, but we keep the english version of the site).</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="www/michelin_restaurants.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now, to start getting into the real thing, we need to open the web inspector tool that is included in most browsers. Usually, under the development tab. On a mac and with Safari, you can acces it by pressing <em>COMMAND+ALT+I</em>. Now to make life simpler, we turn on the element selection mode by pressing <em>SHIFT+COMMAND+C</em>. If you do this with safari on a mac, you should now be seeing something like that:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="www/michelin_rest_web_exp.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This way we can inspect the CSS and HTML elements and get their content. For example, when we navigate to the card of a restaurant and click on it we will see a pop-up like on the following image, and the corresponding part of the html code in the inspector will be highlighted. From then, we can expand the div element and navigate to the last one of interest to us.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="www/michelin_guide_inspector.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This way we can identify the div elements containing some relevant information under their specific class:</p>
+<ul>
+<li><p><code>.restaurant-details__heading--title</code> for the <strong>name</strong>.</p></li>
+<li><p><code>.card__menu-footer--price</code> for the <strong>style</strong>.</p></li>
+<li><p><code>.card__menu</code> which contains attributes for the <strong>coordinates</strong>.</p></li>
+<li><p><code>.link</code> for the <strong>link</strong> to the page of the restaurant.</p></li>
+</ul>
+</section>
+<section id="scrapping" class="level1">
+<h1>Scrapping</h1>
+<p>The <a href="https://rvest.tidyverse.org"><code>rvest</code></a> package provides a set of functions that gets the data from an html page as requested by the user.</p>
+<section id="steps" class="level2">
+<h2 class="anchored" data-anchor-id="steps">Steps</h2>
+<p>First, we read the whole html code of the page via the <code>read_html</code> function, then we specify the class of the element we want to read from. Second, we specify whether we want the whole content of the element or just the text contained inside of it. This is done with the functions <code>html_text2</code> or <code>html_text</code> respectively. We will be using the first one. Additionally, we can get attributes of the elements, this is done through the <code>html_attr</code> function. For each of these function, we specify as argument the attribute of interest found earlier. Finally, we need to combine these function in order to get the data, this is done by chaining the operations with the pipe operator,<code>|&gt;</code>, from <strong>tidyverse</strong>.</p>
+<section id="reading-the-website" class="level3">
+<h3 class="anchored" data-anchor-id="reading-the-website">Reading the website</h3>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>michelin_url <span class="ot">&lt;-</span> <span class="st">"https://guide.michelin.com/gb/en/restaurants"</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>html <span class="ot">&lt;-</span> <span class="fu">read_html</span>(michelin_url)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="extracting-the-relevant-elements" class="level3">
+<h3 class="anchored" data-anchor-id="extracting-the-relevant-elements">Extracting the relevant elements</h3>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>name <span class="ot">&lt;-</span> html <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_elements</span>(<span class="st">".card__menu-content--title"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_text2</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This has created a vector containing the text of all the elements that were found under the class specified, <code>.card__menu-content--title</code>.</p>
+<p>We can now perform the same steps for each value of interest for a restaurant and group it into a tibble.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>name <span class="ot">&lt;-</span> html <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_elements</span>(<span class="st">".card__menu-content--title"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_text2</span>()</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>style <span class="ot">&lt;-</span> html <span class="sc">|&gt;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_elements</span>(<span class="st">".card__menu-footer--price"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_text2</span>() </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>lat <span class="ot">&lt;-</span> html <span class="sc">|&gt;</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_elements</span>(<span class="st">".card__menu"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_attr</span>(<span class="st">"data-lat"</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>lng <span class="ot">&lt;-</span> html <span class="sc">|&gt;</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_elements</span>(<span class="st">".card__menu"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_attr</span>(<span class="st">"data-lng"</span>)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>pre_link <span class="ot">&lt;-</span> html <span class="sc">|&gt;</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_elements</span>(<span class="st">".link"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_attr</span>(<span class="st">"href"</span>)</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>pre_link <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"https://guide.michelin.com"</span>,pre_link[<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">18</span>)],<span class="at">sep =</span> <span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="putting-it-together" class="level2">
+<h2 class="anchored" data-anchor-id="putting-it-together">Putting it together</h2>
+<p>Next, the individual variables are combined in a single data set.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>michelin_guide_scrap <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(name</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                                   ,<span class="st">"lat"</span><span class="ot">=</span><span class="fu">as.numeric</span>(lat)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                                   ,<span class="st">"lng"</span><span class="ot">=</span><span class="fu">as.numeric</span>(lng)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                                   ,style</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                                   ,pre_link[<span class="sc">-</span><span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Note that the link that we extract is the relative path of the page, so we paste the missing bit of the absolute path before it.</p>
+<p>Now, let’s visualize the result:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<table class="table table-sm table-striped">
+<caption>Scrapped data</caption>
+<colgroup>
+<col style="width: 12%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 18%">
+<col style="width: 57%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">name</th>
+<th style="text-align: left;">lat</th>
+<th style="text-align: left;">lng</th>
+<th style="text-align: left;">style</th>
+<th style="text-align: left;">pre_link..1.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Šug</td>
+<td style="text-align: left;">43.50949</td>
+<td style="text-align: left;">16.44329</td>
+<td style="text-align: left;">€€€ · Regional Cuisine</td>
+<td style="text-align: left;">https://guide.michelin.com/gb/en/split-dalmatia/split/restaurant/sug</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Konoba Tri Piruna</td>
+<td style="text-align: left;">43.75935</td>
+<td style="text-align: left;">15.77718</td>
+<td style="text-align: left;">€€ · Modern Cuisine</td>
+<td style="text-align: left;">https://guide.michelin.com/gb/en/sibenik-knin/vodice/restaurant/konoba-tri-piruna</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Taj Mahal</td>
+<td style="text-align: left;">42.64050</td>
+<td style="text-align: left;">18.10876</td>
+<td style="text-align: left;">€€ · Balkan</td>
+<td style="text-align: left;">https://guide.michelin.com/gb/en/dubrovnik-neretva/dubrovnik/restaurant/taj-mahal</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Beštija</td>
+<td style="text-align: left;">45.81079</td>
+<td style="text-align: left;">15.97294</td>
+<td style="text-align: left;">€€ · Market Cuisine</td>
+<td style="text-align: left;">https://guide.michelin.com/gb/en/zagreb-region/zagreb/restaurant/bestija</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Il Ponte</td>
+<td style="text-align: left;">43.51908</td>
+<td style="text-align: left;">16.25026</td>
+<td style="text-align: left;">€€€ · Contemporary</td>
+<td style="text-align: left;">https://guide.michelin.com/gb/en/split-dalmatia/trogir/restaurant/il-ponte</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Konoba Škoj</td>
+<td style="text-align: left;">43.37098</td>
+<td style="text-align: left;">16.35171</td>
+<td style="text-align: left;">€€ · Mediterranean Cuisine</td>
+<td style="text-align: left;">https://guide.michelin.com/gb/en/split-dalmatia/isola-di-solta/restaurant/konoba-skoj</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Et voilà !</p>
+<p>The next steps now could be to look at each restaurants dedicated page and see if there is some more info that can be scrapped from there ! Additionally, there are almost 800 pages on the website that list all the restaurants the michelin guide has reviewed, so there is some need to build extra functions to automate the scrapping of all the data.</p>
+</section>
+</section>
+<section id="to-conclude" class="level1">
+<h1>To conclude…</h1>
+<p>We can go further, and visualize the results on a map using the latitude and longitude of each restaurants we scrapped with a simple <code>leaflet</code> map.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>lng1 <span class="ot">&lt;-</span> <span class="fu">min</span>(michelin_guide_scrap<span class="sc">$</span>lng)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>lng2 <span class="ot">&lt;-</span> <span class="fu">max</span>(michelin_guide_scrap<span class="sc">$</span>lng)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>lat1 <span class="ot">&lt;-</span>  <span class="fu">min</span>(michelin_guide_scrap<span class="sc">$</span>lat)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>lat2 <span class="ot">&lt;-</span> <span class="fu">max</span>(michelin_guide_scrap<span class="sc">$</span>lat)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>popup_name <span class="ot">&lt;-</span> michelin_guide_scrap<span class="sc">$</span>name</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>popup_style <span class="ot">&lt;-</span> michelin_guide_scrap<span class="sc">$</span>style</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>popup_link <span class="ot">&lt;-</span> michelin_guide_scrap<span class="sc">$</span>pre_link</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="fu">leaflet</span>(<span class="at">data =</span> michelin_guide_scrap</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>        ,<span class="at">options =</span> <span class="fu">leafletOptions</span>(<span class="at">maxZoom =</span> <span class="dv">14</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>                                  <span class="co"># ,minZoom = 6</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>                                  ,<span class="at">worldCopyJump =</span> <span class="cn">TRUE</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>                                  )</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>        ) <span class="sc">|&gt;</span> </span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addTiles</span>() <span class="sc">|&gt;</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fitBounds</span>(<span class="at">lng1 =</span> lng1</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>            ,<span class="at">lat1 =</span> lat1</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>            ,<span class="at">lng2 =</span> lng2</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>            ,<span class="at">lat2 =</span> lat2) <span class="sc">|&gt;</span> </span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addCircleMarkers</span>(<span class="at">lng =</span> <span class="sc">~</span>lng</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>                   ,<span class="at">lat =</span> <span class="sc">~</span>lat</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>                   ,<span class="at">radius =</span> <span class="dv">2</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>                   ,<span class="at">color =</span> <span class="st">"black"</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>                   ,<span class="at">opacity =</span> <span class="dv">1</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>                   ,<span class="at">fillColor =</span> <span class="st">"black"</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>                   ,<span class="at">fillOpacity =</span> <span class="dv">1</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>                   ,<span class="at">popup =</span> <span class="fu">paste0</span>(<span class="st">"&lt;h5&gt;"</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>                                   ,popup_name</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>                                   ,<span class="st">"&lt;/h5&gt;"</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>                                   ,<span class="st">"&lt;hr&gt;"</span></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>                                   ,<span class="st">"&lt;h6&gt; Style: "</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>                                   ,popup_style</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>                                   ,<span class="st">"&lt;/h6&gt;"</span></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>                                   ,<span class="st">"&lt;p&gt; &lt;a href = "</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>                                   ,popup_link</span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>                                   ,<span class="st">" target = '_blank' &gt; Restaurant page &lt;/a&gt;"</span>)</span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>                   ,<span class="at">popupOptions =</span> <span class="fu">popupOptions</span>(<span class="at">minWidth =</span> <span class="st">"10%"</span></span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>                                                ,<span class="at">keepInView =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>                   ,<span class="at">label =</span> <span class="sc">~</span>name)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="leaflet html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-6d5bfbd812f4b76e82fe" style="width:80%;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-6d5bfbd812f4b76e82fe">{"x":{"options":{"maxZoom":14,"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"worldCopyJump":true},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addCircleMarkers","args":[[43.5094919,43.759354,42.6404963,45.810785,43.5190802,43.370985,45.316772,43.277737,45.22743,44.82483,42.9615394,42.6415506,42.640522,42.640703,45.7112127,45.4320136,45.2389541,43.17123,43.5056955,44.571006],[16.4432943,15.777178,18.1087558,15.9729381,16.2502609,16.3517128,13.559227,17.061975,13.590606,13.866587,17.136996,18.1115484,18.109539,18.1099112,16.0801126,13.6353543,14.2488125,16.44177,16.4738468,14.8975384],2,null,null,{"interactive":true,"className":"","stroke":true,"color":"black","weight":5,"opacity":1,"fill":true,"fillColor":"black","fillOpacity":1},null,null,["<h5>Šug<\/h5><hr><h6> Style: €€€ · Regional Cuisine<\/h6><p> <a href = https://guide.michelin.com/gb/en/split-dalmatia/split/restaurant/sug target = '_blank' > Restaurant page <\/a>","<h5>Konoba Tri Piruna<\/h5><hr><h6> Style: €€ · Modern Cuisine<\/h6><p> <a href = https://guide.michelin.com/gb/en/sibenik-knin/vodice/restaurant/konoba-tri-piruna target = '_blank' > Restaurant page <\/a>","<h5>Taj Mahal<\/h5><hr><h6> Style: €€ · Balkan<\/h6><p> <a href = https://guide.michelin.com/gb/en/dubrovnik-neretva/dubrovnik/restaurant/taj-mahal target = '_blank' > Restaurant page <\/a>","<h5>Beštija<\/h5><hr><h6> Style: €€ · Market Cuisine<\/h6><p> <a href = https://guide.michelin.com/gb/en/zagreb-region/zagreb/restaurant/bestija target = '_blank' > Restaurant page <\/a>","<h5>Il Ponte<\/h5><hr><h6> Style: €€€ · Contemporary<\/h6><p> <a href = https://guide.michelin.com/gb/en/split-dalmatia/trogir/restaurant/il-ponte target = '_blank' > Restaurant page <\/a>","<h5>Konoba Škoj<\/h5><hr><h6> Style: €€ · Mediterranean Cuisine<\/h6><p> <a href = https://guide.michelin.com/gb/en/split-dalmatia/isola-di-solta/restaurant/konoba-skoj target = '_blank' > Restaurant page <\/a>","<h5>Damir & Ornella<\/h5><hr><h6> Style: €€€ · Seafood<\/h6><p> <a href = https://guide.michelin.com/gb/en/istria/novigrad/restaurant/damir-ornella target = '_blank' > Restaurant page <\/a>","<h5>Jeny<\/h5><hr><h6> Style: €€€€ · Modern Cuisine<\/h6><p> <a href = https://guide.michelin.com/gb/en/split-dalmatia/tucepi/restaurant/jeny target = '_blank' > Restaurant page <\/a>","<h5>SV.Nikola<\/h5><hr><h6> Style: €€€ · Classic Cuisine<\/h6><p> <a href = https://guide.michelin.com/gb/en/istria/porec/restaurant/sv-nikola target = '_blank' > Restaurant page <\/a>","<h5>Batelina<\/h5><hr><h6> Style: €€ · Seafood<\/h6><p> <a href = https://guide.michelin.com/gb/en/istria/banjole/restaurant/batelina target = '_blank' > Restaurant page <\/a>","<h5>Filippi<\/h5><hr><h6> Style: €€€ · Mediterranean Cuisine<\/h6><p> <a href = https://guide.michelin.com/gb/en/dubrovnik-neretva/korcula/restaurant/filippi target = '_blank' > Restaurant page <\/a>","<h5>Restaurant 360<\/h5><hr><h6> Style: €€€€ · Modern Cuisine<\/h6><p> <a href = https://guide.michelin.com/gb/en/dubrovnik-neretva/dubrovnik/restaurant/360%C2%BA target = '_blank' > Restaurant page <\/a>","<h5>Dubrovnik<\/h5><hr><h6> Style: €€€ · Mediterranean Cuisine<\/h6><p> <a href = https://guide.michelin.com/gb/en/dubrovnik-neretva/dubrovnik/restaurant/dubrovnik target = '_blank' > Restaurant page <\/a>","<h5>Marco Polo<\/h5><hr><h6> Style: €€ · Mediterranean Cuisine<\/h6><p> <a href = https://guide.michelin.com/gb/en/dubrovnik-neretva/dubrovnik/restaurant/marco-polo-1202424 target = '_blank' > Restaurant page <\/a>","<h5>Mon Ami<\/h5><hr><h6> Style: €€€ · Mediterranean Cuisine<\/h6><p> <a href = https://guide.michelin.com/gb/en/zagreb-region/velika-gorica/restaurant/mon-ami target = '_blank' > Restaurant page <\/a>","<h5>Konoba Malo Selo<\/h5><hr><h6> Style: €€ · Regional Cuisine<\/h6><p> <a href = https://guide.michelin.com/gb/en/istria/buje/restaurant/konoba-malo-selo target = '_blank' > Restaurant page <\/a>","<h5>Johnson<\/h5><hr><h6> Style: €€ · Seafood<\/h6><p> <a href = https://guide.michelin.com/gb/en/primorje-gorski-kotar/moscenicka-draga/restaurant/johnson target = '_blank' > Restaurant page <\/a>","<h5>Mediterraneo<\/h5><hr><h6> Style: €€ · Croatian<\/h6><p> <a href = https://guide.michelin.com/gb/en/split-dalmatia/hvar_1779354/restaurant/mediterraneo-1204562 target = '_blank' > Restaurant page <\/a>","<h5>BÒME<\/h5><hr><h6> Style: €€ · Mediterranean Cuisine<\/h6><p> <a href = https://guide.michelin.com/gb/en/split-dalmatia/split/restaurant/bome target = '_blank' > Restaurant page <\/a>","<h5>Boškinac<\/h5><hr><h6> Style: €€€€ · Creative<\/h6><p> <a href = https://guide.michelin.com/gb/en/lika-senj/novalja/restaurant/boskinac target = '_blank' > Restaurant page <\/a>"],{"maxWidth":300,"minWidth":"10%","autoPan":true,"keepInView":true,"closeButton":true,"className":""},["Šug","Konoba Tri Piruna","Taj Mahal","Beštija","Il Ponte","Konoba Škoj","Damir &amp; Ornella","Jeny","SV.Nikola","Batelina","Filippi","Restaurant 360","Dubrovnik","Marco Polo","Mon Ami","Konoba Malo Selo","Johnson","Mediterraneo","BÒME","Boškinac"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"fitBounds":[42.6404963,13.559227,45.810785,18.1115484,[]],"limits":{"lat":[42.6404963,45.810785],"lng":[13.559227,18.1115484]}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>For a more advanced visualization of the full data set, check the <a href="https://schlosser.shinyapps.io/michelin_guide/">shiny app</a>.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ivann Schlosser">
+
+<title>Ivann’s blog - Fast Distance rewriting in R with C++</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../../styles.scss">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Ivann’s blog</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/ischlo"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/irscar"><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Fast Distance rewriting in R with C++</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">cpp</div>
+                <div class="quarto-category">rstats</div>
+                <div class="quarto-category">gis</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Ivann Schlosser </p>
+            </div>
+    </div>
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>Everyone in the R community is probably familiar with the great sf package. It allows you to do pretty much any operations with geometries, and works very well with the tidyverse packages, data.table.</p>
+</section>
+<section id="rcpp-and-rcpparmadillo" class="level1">
+<h1>Rcpp and RcppArmadillo</h1>
+<p>The user friendliness of R can pretty easily be combined with the power and memory efficiency of C++ in order to perform certain tasks with greater speed. Rcpp is a R package that opens for the user the door into C++. And RcppArmadillo is a further extension of the Rcpp package that provides access to the Armadillo library in C++, a very comprehensive set of classes and functions related to linear algebra. You can build matrices, vectors and perform pretty much any task with them through the functions of this library. Let’s see how we can use it to help us calculate distances between points more efficiently. More on the details of using this library with R will probably be shown in another blog post.</p>
+</section>
+<section id="different-distance-measures" class="level1">
+<h1>Different distance measures</h1>
+<p>There are 2 conceptually distinctive ways to measure distances in a geographical context. First, when we assume that earth is a sphere, in that case, we use a type of spherical coordinates with a fixed radius <span class="math inline">\(R_e\)</span>, leaving the longitude <span class="math inline">\(x\)</span>, or usually <span class="math inline">\(\phi\)</span> in spherical coordinates notation and the latitude <span class="math inline">\(y\)</span>, or <span class="math inline">\(\theta\)</span> as parameters that allow us to locate any point on the surface of earth without ambiguity. The longitude angle takes values <span class="math inline">\(\phi \in [0,360]\)</span> degrees, while the latitude <span class="math inline">\(\theta \in [-90, 90]\)</span> degrees. The distance between two points, uniquely identified by their coordinates can be computed by using a generalized formula for the length of an arc on a circle, <span class="math display">\[d = \lambda R_e\]</span> And in the case of a sphere,<span class="math inline">\(\lambda\)</span> is the angle between two radii from the centre of the sphere to each of the points. So how do we compute this angle ? There are actually several ways, they are described in this <a href="https://en.wikipedia.org/wiki/Great-circle_distance">wikipedia</a> page. Or for a more developed explanation, refer to the geometry books that treat on the subject.</p>
+<p>Due to various issues related to rounding errors, the best way to measure the <span class="math inline">\(\lambda\)</span> angle is through the Vincenty’s formula for an ellipsoid with equal major and minor axis. The formula is the following:</p>
+<p><span class="math display">\[
+\lambda = atan \frac{\sqrt{(cos(\theta_2)sin(\Delta \phi))^2 + (cos(\theta_1)sin(\theta_2)- cos(\theta_2)sin(\theta_1)cos(\Delta \phi))^2}}{sin(\theta_1)sin(\theta_2)+cos(\theta_1)cos(\theta_2)cos(\Delta \phi)}
+\]</span> where <span class="math inline">\(\Delta \phi = |\phi_1-\phi_2|\)</span>. We take <span class="math inline">\(R_e = 6371009\)</span> meters and the distance is thus <span class="math inline">\(d= \lambda R_e\)</span>.</p>
+<section id="rewriting-numerically-in-c" class="level2">
+<h2 class="anchored" data-anchor-id="rewriting-numerically-in-c">Rewriting numerically in C++</h2>
+<p>The following code is vectorised so the functions can be written to compute the distance between two sets of points, provided as matrices with the x coordinate in the first column and y in the second. Notice that the angle values are converted to radians using the following relation <span class="math inline">\(\theta_{rad} = \frac{\theta_{deg}*\pi}{180}\)</span></p>
+<div class="cell" data-layout-align="center">
+<pre class="rcpp cell-code"><code>#include &lt;RcppArmadillo.h&gt;
+#include &lt;cstdlib&gt;
+
+// [[Rcpp::depends(RcppArmadillo)]]
+// [[Rcpp::plugins("cpp11")]]
+
+const double radius = 6371009;
+const double pi = 3.141593;
+
+// [[Rcpp::export]]
+arma::vec gc_distance_pair_cpp(const arma::mat&amp; coord1,const arma::mat&amp; coord2) {
+
+  arma::uword n = coord2.n_rows;
+
+  arma::vec x1(n);
+  arma::vec y1(n);
+
+  arma::vec x2(n);
+  arma::vec y2(n);
+
+  x2 = coord2.col(0)*pi/180;
+  y2 = coord2.col(1)*pi/180;
+
+  x1 = coord1.col(0)*pi/180;
+  y1 = coord1.col(1)*pi/180;
+
+  arma::vec num = arma::sqrt(arma::square(arma::cos(y2)%arma::sin(arma::abs(x1-x2))) + arma::square(arma::cos(y1)%sin(y2) - arma::sin(y1)%arma::cos(y2)%arma::cos(arma::abs(x1-x2))));
+  arma::vec den = arma::sin(y1)%arma::sin(y2) + arma::cos(y1)%arma::cos(y2)%arma::cos(arma::abs(x1-x2));
+
+  return radius*arma::atan(num/den);
+}
+</code></pre>
+</div>
+</section>
+</section>
+<section id="benchmarks" class="level1">
+<h1>Benchmarks</h1>
+<p>Let’s now look at some comparison of performance:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(microbenchmark)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>centroids <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Workplace_Zones_Dec_2011_PWC_in_England_and_Wales_2022/FeatureServer/0/query?outFields=*&amp;where=1%3D1&amp;f=geojson"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading layer `OGRGeoJSON' from data source 
+  `https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Workplace_Zones_Dec_2011_PWC_in_England_and_Wales_2022/FeatureServer/0/query?outFields=*&amp;where=1%3D1&amp;f=geojson' 
+  using driver `GeoJSON'
+Simple feature collection with 53578 features and 3 fields
+Geometry type: POINT
+Dimension:     XY
+Bounding box:  xmin: -6.330018 ymin: 49.91475 xmax: 1.759144 ymax: 55.78878
+Geodetic CRS:  WGS 84</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># take two random samples of 20000 points</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>samp1_sf <span class="ot">&lt;-</span> <span class="fu">sample</span>(centroids<span class="sc">$</span>geometry, <span class="dv">20000</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>samp2_sf <span class="ot">&lt;-</span> <span class="fu">sample</span>(centroids<span class="sc">$</span>geometry, <span class="dv">20000</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>samp1 <span class="ot">&lt;-</span> samp1_sf <span class="sc">|&gt;</span> <span class="fu">st_coordinates</span>()</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>samp2 <span class="ot">&lt;-</span> samp2_sf <span class="sc">|&gt;</span> <span class="fu">st_coordinates</span>()</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>cpp_dist <span class="ot">&lt;-</span> <span class="fu">gc_distance_pair_cpp</span>(samp1,samp2)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>sf_dist <span class="ot">&lt;-</span> <span class="fu">st_distance</span>(samp1_sf,samp2_sf,<span class="at">by_element =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span>  units<span class="sc">::</span><span class="fu">set_units</span>(<span class="cn">NULL</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>benchmark_r_cpp <span class="ot">&lt;-</span> <span class="fu">microbenchmark</span>(</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"cpp_distance"</span> <span class="ot">=</span> <span class="fu">gc_distance_pair_cpp</span>(samp1,samp2)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  ,<span class="st">"sf_distance"</span> <span class="ot">=</span> <span class="fu">st_distance</span>(samp1_sf,samp2_sf,<span class="at">by_element =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  ,<span class="at">times =</span> <span class="dv">10</span>)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>benchmark_r_cpp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Unit: microseconds
+         expr       min        lq       mean    median         uq        max
+ cpp_distance   814.342   818.729   893.3449   843.616    875.186   1323.767
+  sf_distance 66431.808 67874.926 86249.5147 68582.012 109058.729 126514.766
+ neval
+    10
+    10</code></pre>
+</div>
+</div>
+<p>The performance gain is more than 100 times ! And in terms of value difference:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(cpp_dist<span class="sc">-</span>sf_dist, <span class="at">breaks =</span> <span class="dv">100</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>     ,<span class="at">xlab =</span> <span class="st">"Difference"</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>     ,<span class="at">freq =</span> <span class="cn">FALSE</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>     ,<span class="at">main =</span> <span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fast_distance_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>These differences come from rounding errors and the fact that sf uses a radius value for earth which is 1 m more than this code.</p>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>Consider rewriting certain functions for your own specific needs and with the appropriate tools in order to significantly gain in performance of your code. It is important to stay cautious and test for robustness whatever you do, this will make your implementations stand out and be actually useful. A package like sf is a brilliant piece of software in part due to the quality control it does on the data before processing it, but the downside of that is a loss in speed and performance. So if your code is organised properly and you can be sure that the data that enters your environment is in due form, you can increase your performances.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

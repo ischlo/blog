@@ -1,0 +1,142 @@
+[
+  {
+    "objectID": "posts/psql_r/postresql_through_r.html",
+    "href": "posts/psql_r/postresql_through_r.html",
+    "title": "PostgreSQL with R",
+    "section": "",
+    "text": "This tutorial will present a straightforward way to get started with databases using R. These tools together allow to combine the user friendliness of R and add to it the computing power and speed of SQL databases. A minimum knowledge of SQL is preferable to have but as we will see one can use these tools together even without it. Using external databases for storing and doing certain operations on data is inevitable when the size of data sets reaches a certain size, or you want to provide your data to be accessed and used by others, among the many applications. This tutorial aims at uncovering some of the basic things to know and consider."
+  },
+  {
+    "objectID": "posts/psql_r/postresql_through_r.html#summarising",
+    "href": "posts/psql_r/postresql_through_r.html#summarising",
+    "title": "PostgreSQL with R",
+    "section": "Summarising",
+    "text": "Summarising"
+  },
+  {
+    "objectID": "posts/psql_r/postresql_through_r.html#filtering",
+    "href": "posts/psql_r/postresql_through_r.html#filtering",
+    "title": "PostgreSQL with R",
+    "section": "Filtering",
+    "text": "Filtering"
+  },
+  {
+    "objectID": "posts/psql_r/postresql_through_r.html#indexing",
+    "href": "posts/psql_r/postresql_through_r.html#indexing",
+    "title": "PostgreSQL with R",
+    "section": "Indexing",
+    "text": "Indexing"
+  },
+  {
+    "objectID": "posts/psql_r/postresql_through_r.html#views",
+    "href": "posts/psql_r/postresql_through_r.html#views",
+    "title": "PostgreSQL with R",
+    "section": "Views",
+    "text": "Views"
+  },
+  {
+    "objectID": "posts/psql_r/postresql_through_r.html#altering-tables",
+    "href": "posts/psql_r/postresql_through_r.html#altering-tables",
+    "title": "PostgreSQL with R",
+    "section": "Altering tables",
+    "text": "Altering tables\n\nAdding rows\n\n\nModifying values"
+  },
+  {
+    "objectID": "posts/tennis_map/tennis_map.html",
+    "href": "posts/tennis_map/tennis_map.html",
+    "title": "Using open source data for web maps",
+    "section": "",
+    "text": "This post will cover the steps required to get data from an open source, analyze it, and then publish it as a interactive web document. The problem we will be trying to solve is to find all the tennis courts in London that are mapped in OpenStreetMap and show them online so that we could refer to it when we want to play. As there are multiple services that allow to book courts, and some courts are in free access, it is sometimes difficult to find the best spot to play at."
+  },
+  {
+    "objectID": "posts/tennis_map/tennis_map.html#nodes-ways-relations",
+    "href": "posts/tennis_map/tennis_map.html#nodes-ways-relations",
+    "title": "Using open source data for web maps",
+    "section": "Nodes, ways, relations",
+    "text": "Nodes, ways, relations\nThis is specific to how OSM stores any geographic feature. More on this can be found here. Basically, any feature of the map is constructed out of nodes, which can also be grouped into ways (the name is slightly confusing as it refers something more general, than a road, but rather to a set on nodes). A road segment for example can be identified as a way, which will have a set of nodes that locate the start and end of each individual straight line segment that constitutes a road. Each node can be independent as well. In the case of a road sign, it will simply be identified as a node. Both nodes and ways will have their set of tags. This includes the key and value that we looked at earlier, but also any other information that is known about the feature, such as its coordinates etc…"
+  },
+  {
+    "objectID": "posts/tennis_map/tennis_map.html#processing",
+    "href": "posts/tennis_map/tennis_map.html#processing",
+    "title": "Using open source data for web maps",
+    "section": "Processing",
+    "text": "Processing\nNow that the data is downloaded, we will need to process it first in order to extract the relevant information, in our case the location of tennis courts in London. We will use a very powerful command line tool called osmosis. It allows to work on raw OSM data sets of pretty much any size and efficiently extract what we need from it. Follow the instruction on its wiki on how to download it.\nNow open a terminal and type osmosis into it to check that your machine has set it up successfully. You should see a brief tutorial show up, which might be helpful to look at as a first example.\nWe will now create the command that will go through the raw data and take out what we ask it. After calling the osmosis library, we need to specify the data we are working on with the --read-pbf command, and then we add the parameters explaining what to we want to extract. We will start by specifying a bounding box with the --bounding-box parameter to make sure we are extracting in the right area. Then, we add the keys and values we are interested in. This is done with the command --tag-filter accept-ways sport=tennis in which we add the ways we want accept, in other words want to extract. We will omit the relations by specifying --tag-filter reject-relations. Then we specify that we want to extract the nodes that are used in the ways as well with --used-nodes. The final information we need to provide is what to do with the output, in our case, we will write it locally into a XML file with the --write-xml command.\nThe final command looks like that:\n\n\nosmosis \\\n--read-pbf data/london.osm.pbf \\\n--bounding-box left=-0.5507 right=0.2994 top=51.7168 bottom=51.2499 \\\n--tag-filter accept-ways sport=tennis \\\n--tag-filter reject-relations \\\n--used-nodes \\\n--write-xml data/london_tennis.osm\n\nOsmosis also allows to write short versions of commands to simplify the process, in our case, we can rewrite to have:\n\n\nosmosis \\\n--rb data/london.osm.pbf \\\n--bb left=-0.5507 right=0.2994 top=51.7168 bottom=51.2499 \\\n--tf accept-ways sport=tennis \\\n--tf reject-relations \\\n--un \\\n--wx data/london_tennis.osm\n\nNotice the escape character \\ that allows to write other multiple lines, making it easy to read. When the command is done executing you should have a file london_tennis.osm in the data folder, it should weight around 5.5 MB.\nWe can now open this fie to have a preview and better understanding of the the structure of the file. We can see the node elements, and within, the tags lat, lon corresponding to their coordinates as well as an id. If we scroll further down, we see appearing ways that contain node ids and other tags, such as sport, leisure, tennis, name."
+  },
+  {
+    "objectID": "posts/tennis_map/tennis_map.html#engineering",
+    "href": "posts/tennis_map/tennis_map.html#engineering",
+    "title": "Using open source data for web maps",
+    "section": "Engineering",
+    "text": "Engineering\nWe have now narrowed down our data, but there is still some more to do to be able to use it for a web map. FOr this section, we will R to read in the XML files and further process the data.\n\nReading XML data in R\nThe XML package in R allows us to manipulate such data files with the user friendliness of R. We will read in the file, and define a few functions to assist us in extracting the attributes that we will use:\n\nlibrary(sf)\nlibrary(data.table)\nlibrary(dplyr)\nlibrary(XML)\nlibrary(foreach)\nlibrary(Btoolkit)\nlibrary(xml2)\nlibrary(leaflet)\nlibrary(leafgl)\n\n####\n\nget_nodes <- function(el, name = \"nd\", recursive = FALSE) {\n  kids = xmlChildren(el)\n  idx = (names(kids) == name)\n  els = kids[idx]\n  # if (!recursive || xmlSize(el) == 0) \n  #   return(els)\n  # subs = xmlApply(el, xmlElementsByTagName, name, TRUE)\n  # subs = unlist(subs, recursive = FALSE)\n  # # append.xmlNode(els, subs[!sapply(subs, is.null)])\n  sapply(els, XML::xmlAttrs, USE.NAMES = FALSE) |> unname()\n}\n\nget_tags <- function(el, name = \"tag\", recursive = FALSE) {\n  kids = xmlChildren(el)\n  idx = (names(kids) == name)\n  els = kids[idx]\n  # if (!recursive || xmlSize(el) == 0) \n  #   return(els)\n  # subs = xmlApply(el, xmlElementsByTagName, name, TRUE)\n  # subs = unlist(subs, recursive = FALSE)\n  # # append.xmlNode(els, subs[!sapply(subs, is.null)])\n  sapply(els,XML::xmlAttrs) |> \n    unname() |> \n    t() |> \n    as.data.table() |> \n    `names<-`(c(\"key\",\"value\"))\n  \n}\n\n#####\n\nlondon_tennis_xml <- XML::xmlParse(\"tennis_map/data/london_tennis.osm.xml\")\n\n\n\nNodes\nNow we can start extracting the nodes:\n\nnodes <- getNodeSet(london_tennis_xml,\"//node\") # //node means we want only node tags from the XML\n\n# this function is applied to each separate //node element and gets its attributes. \nnodes <- xmlApply(nodes, xmlAttrs) \n\n# reformat the data into a data table with id, lon, lat variables. \nnodes_dt <- sapply(nodes, FUN = function(nd) c(id = nd[[\"id\"]],lon = nd[[\"lon\"]],lat = nd[[\"lat\"]])) |> \n  t() |> \n  as.data.table() \n\n# nodes_dt\nnodes_dt[,id:=as.character(id)] # make sure ids are stored as character\n\n\n\nWays\nNow the ways, it is a bit more complicated here, because each way contains a potentially different number of nodes and key-value pairs. To help us extract the data properly, we defined the functions earlier.\n\nways <-\n  XML::xpathApply(london_tennis_xml, \"//way\", fun = function(w) {w})\n\n# get_tags(ways[[1]])\n\nway_nodes <- lapply(ways, FUN = function(w) {list(id = XML::xmlGetAttr(w,\"id\")\n                                                      ,nodes = get_nodes(w)\n                                                      ,tags = get_tags(w)\n                                                  )\n})\n\nLet’s have a look at all the unique keys that we extracted:\n\nsapply(way_nodes, FUN = function(way) way$tags$key) |> unlist() |> unique()\n\nNow we will add the coordinates of the nodes to each way.\n\nfor (j in 1:length(way_nodes)) {\n  way_nodes[[j]]$nodes <- cbind(way_nodes[[j]]$nodes,nodes_dt[match(way_nodes[[j]]$nodes,id),.(lon,lat)])\n}\n\nFinally, let’s create polygons for each way corresponding to a single court, or a sports facility containing tennis courts.\n\ntennis_courts <- foreach::foreach(i = 1:length(way_nodes)) %do% {\n  nds <- way_nodes[[i]]$nodes[,.(as.double(lon),as.double(lat))] |> \n    as.matrix()\n  if(any(is.na(nds))) sf::st_polygon(x = list(),dim = \"XY\") else sf::st_polygon(x = list(nds),dim = \"XY\")\n}\n\ntennis_courts <- tennis_courts |> st_sfc(crs = 4326) |> st_as_sf()\n\n\n\nPopup\nNow with the key-value pairs containing information about the courts we can create character containint HTML that will be shown as a popup on our map.\n\npopups <- sapply(way_nodes, function(pitch) paste(\"<h4>\"\n                                                  ,pitch$tags$key\n                                                  ,\" : \"\n                                                  ,pitch$tags$value\n                                                  ,\"</h4>\"\n                                                  ,sep = \"\"\n                                                  ,collapse = \" \"))\n\n\n####\n\ntennis_courts$popups <- popups\n\nFinally, we save the data as a geojson file in a data folder that we will use for our webpage."
+  },
+  {
+    "objectID": "posts/regex/reg_expressions.html",
+    "href": "posts/regex/reg_expressions.html",
+    "title": "Regular expressions",
+    "section": "",
+    "text": "This tutorial will introduce the basics of regular expressions, through some initial considerations and then concrete examples of varying difficulty."
+  },
+  {
+    "objectID": "posts/regex/reg_expressions.html#categories-of-characters",
+    "href": "posts/regex/reg_expressions.html#categories-of-characters",
+    "title": "Regular expressions",
+    "section": "Categories of characters",
+    "text": "Categories of characters\nThe following table presents a non-exhaustive set of character categories:\n\n\n\n\n\n\n\n\n\n\n\nCategory\nSymbol\nExample\nOpposite\nSymbol\nExample\n\n\n\n\nnumbers\n\\d\n12387\nnon-numbers\n\\D\n:-dfv*\n\n\nletters (lower case)\n[a-z]\njsknvs\nletters (upper case)\n[A-Z]\nSDFVM\n\n\nletters (lower & upper)\n[a-zA-Z]\nfvFVDf\n-\n-\n-\n\n\nnumbers & letters\n[:alphanum:]\n3k4rF4\n-\n-\n-\n\n\nwords\n\\w\nHello\nnon-words\n\\W\n!\n\n\nwhitespace\n\\s\n” ”\nnon whitespace\n\\S\n“kj4&n”\n\n\nboundaries of words\n\\b\n_hello_\ninterior of words\n\\B\nh_e_l_l_o\n\n\n\nAs you can see, some categories have a designated letter, but in other cases they can be designated by placing the characters of interest between square braquets. This allows to customize and create your own categories of regexes suitable for your specific needs. For example, let’s say you want to find numbers or the letter h, this would look like [\\dh]. Inversely, if you want to match for everything except those characters, place the ^ in front of the others: [^\\dh].\nOther symbols help us with specifying repetitions, or ordering:\n\nPositioning\n\n^ : beginning of sequence, ^\\d\n\\$ : end of sequence, \\dh\\$\n\nRepetition\n\n* : zero or more times\n+ : one or more time\n{min, max} : minimal and maximal number of repetitions\n{n} : match exactly n times\n\nAny symbol\n\n. : match any symbol\n? : match potentially a symbol\n\nGroups\n\n() : group elements\n\nLogical\n\n| : logical or\n\n\nIt is possible to group several characters by enclosing them into round brackets(). This will treat whatever is inside them as one single block of characters. We can include any of the mentioned regex symbols within them, particularly the logical or that can help with differentiating cases."
+  },
+  {
+    "objectID": "posts/error_handling/error_handling_r.html",
+    "href": "posts/error_handling/error_handling_r.html",
+    "title": "Error handling in R",
+    "section": "",
+    "text": "This blog post will cover exception handling in R. The main purpose of it is to ultimately build robust, fault proof scripts, that can be part of your everyday workflow, but also be easily shared with others, via packages or version control and perform as expected in any situation or raise informative messages to the user as to the possible problems.\nWhether you are a researcher, a student, a software engineer, a data scientist, you will always encounter numerous bugs, errors and other types of unexpected behavior from your machine when working on code. And while this is pretty much inevitable, there are good habits and tricks to learn in order to reduce the time spent figuring out, solving problems. Ultimately, the goal is to build efficient code, that is well commented, fault proof, easily reusable, and user friendly. All these aspects are important when devellopping software that can ultimately be shared, and used by others.\nSo this post will focus on common mistakes that are encountered, the main things to keep in mind, how to build functions that do specifically what you ask them to every time, or notify you of what is wrong.\nThis tutorial will be about R, but the general ideas covered apply more generally to problem solving and software development."
+  },
+  {
+    "objectID": "posts/error_handling/error_handling_r.html#writing-functions",
+    "href": "posts/error_handling/error_handling_r.html#writing-functions",
+    "title": "Error handling in R",
+    "section": "Writing functions",
+    "text": "Writing functions\nLet’s look at the output of the following operation, it is intentionally misused to raise an error message:\nOne of the most important elements of any good software is it’s ability to put the user in a situation, where it is almost impossible to produce an error, and if an error still occurs somewhere, then the message associated to it should allow the user to straight away correct it.\n\naddition <- functino(x,y) {\n  return(x+y)\n}\n\naddition(1, \"number\")"
+  },
+  {
+    "objectID": "posts/michelin_web_scrapping/michelin_data_engineering.html",
+    "href": "posts/michelin_web_scrapping/michelin_data_engineering.html",
+    "title": "Web scrapping in R",
+    "section": "",
+    "text": "Sometime, you can find interesting data for a project on the web, and quite often it will be possible to download the raw data set,like a spreadsheet, csv or json, for your own use. However, this is not always the case. And in these kind of cases, there is always the possibility to try web-scrapping. While it can seem like a lengthy extra step towards the realization of your intended idea, it can also give you the opportunity to develop a new skill, and understand better how websites work in general.\nWeb scrapping is generally legal, so you shouldn’t feel like you are doing something wrong when scrapping data. Occasionally, some web sites will have protection against it, but you still can manage to get what you want. This post will show an example of using the rvest package ( another great package from the tidyverse team) to scrap data from the website of michelin restaurants. Their data is not accessible online in raw format, so we have a true real-world case in hands."
+  },
+  {
+    "objectID": "posts/michelin_web_scrapping/michelin_data_engineering.html#steps",
+    "href": "posts/michelin_web_scrapping/michelin_data_engineering.html#steps",
+    "title": "Web scrapping in R",
+    "section": "Steps",
+    "text": "Steps\nFirst, we read the whole html code of the page via the read_html function, then we specify the class of the element we want to read from. Second, we specify whether we want the whole content of the element or just the text contained inside of it. This is done with the functions html_text2 or html_text respectively. We will be using the first one. Additionally, we can get attributes of the elements, this is done through the html_attr function. For each of these function, we specify as argument the attribute of interest found earlier. Finally, we need to combine these function in order to get the data, this is done by chaining the operations with the pipe operator,|>, from tidyverse.\n\nReading the website\n\nmichelin_url <- \"https://guide.michelin.com/gb/en/restaurants\"\n\nhtml <- read_html(michelin_url)\n\n\n\nExtracting the relevant elements\n\nname <- html |>\n  html_elements(\".card__menu-content--title\") |> \n  html_text2()\n\nThis has created a vector containing the text of all the elements that were found under the class specified, .card__menu-content--title.\nWe can now perform the same steps for each value of interest for a restaurant and group it into a tibble.\n\nname <- html |>\n  html_elements(\".card__menu-content--title\") |>\n  html_text2()\n\nstyle <- html |>\n  html_elements(\".card__menu-footer--price\") |>\n  html_text2() \n\nlat <- html |>\n  html_elements(\".card__menu\") |>\n  html_attr(\"data-lat\")\n\nlng <- html |>\n  html_elements(\".card__menu\") |>\n  html_attr(\"data-lng\")\n\npre_link <- html |>\n  html_elements(\".link\") |>\n  html_attr(\"href\")\n\npre_link <- paste(\"https://guide.michelin.com\",pre_link[-c(1:18)],sep = \"\")"
+  },
+  {
+    "objectID": "posts/michelin_web_scrapping/michelin_data_engineering.html#putting-it-together",
+    "href": "posts/michelin_web_scrapping/michelin_data_engineering.html#putting-it-together",
+    "title": "Web scrapping in R",
+    "section": "Putting it together",
+    "text": "Putting it together\nNext, the individual variables are combined in a single data set.\n\nmichelin_guide_scrap <- data.frame(name\n                                   ,\"lat\"=as.numeric(lat)\n                                   ,\"lng\"=as.numeric(lng)\n                                   ,style\n                                   ,pre_link[-1])\n\nNote that the link that we extract is the relative path of the page, so we paste the missing bit of the absolute path before it.\nNow, let’s visualize the result:\n\n\n\nScrapped data\n\n\n\n\n\n\n\n\n\nname\nlat\nlng\nstyle\npre_link..1.\n\n\n\n\nŠug\n43.50949\n16.44329\n€€€ · Regional Cuisine\nhttps://guide.michelin.com/gb/en/split-dalmatia/split/restaurant/sug\n\n\nKonoba Tri Piruna\n43.75935\n15.77718\n€€ · Modern Cuisine\nhttps://guide.michelin.com/gb/en/sibenik-knin/vodice/restaurant/konoba-tri-piruna\n\n\nTaj Mahal\n42.64050\n18.10876\n€€ · Balkan\nhttps://guide.michelin.com/gb/en/dubrovnik-neretva/dubrovnik/restaurant/taj-mahal\n\n\nBeštija\n45.81079\n15.97294\n€€ · Market Cuisine\nhttps://guide.michelin.com/gb/en/zagreb-region/zagreb/restaurant/bestija\n\n\nIl Ponte\n43.51908\n16.25026\n€€€ · Contemporary\nhttps://guide.michelin.com/gb/en/split-dalmatia/trogir/restaurant/il-ponte\n\n\nKonoba Škoj\n43.37098\n16.35171\n€€ · Mediterranean Cuisine\nhttps://guide.michelin.com/gb/en/split-dalmatia/isola-di-solta/restaurant/konoba-skoj\n\n\n\n\n\nEt voilà !\nThe next steps now could be to look at each restaurants dedicated page and see if there is some more info that can be scrapped from there ! Additionally, there are almost 800 pages on the website that list all the restaurants the michelin guide has reviewed, so there is some need to build extra functions to automate the scrapping of all the data."
+  },
+  {
+    "objectID": "posts/fast_distance/fast_distance.html",
+    "href": "posts/fast_distance/fast_distance.html",
+    "title": "Fast Distance rewriting in R with C++",
+    "section": "",
+    "text": "Everyone in the R community is probably familiar with the great sf package. It allows you to do pretty much any operations with geometries, and works very well with the tidyverse packages, data.table."
+  },
+  {
+    "objectID": "posts/fast_distance/fast_distance.html#rewriting-numerically-in-c",
+    "href": "posts/fast_distance/fast_distance.html#rewriting-numerically-in-c",
+    "title": "Fast Distance rewriting in R with C++",
+    "section": "Rewriting numerically in C++",
+    "text": "Rewriting numerically in C++\nThe following code is vectorised so the functions can be written to compute the distance between two sets of points, provided as matrices with the x coordinate in the first column and y in the second. Notice that the angle values are converted to radians using the following relation \\(\\theta_{rad} = \\frac{\\theta_{deg}*\\pi}{180}\\)\n\n#include <RcppArmadillo.h>\n#include <cstdlib>\n\n// [[Rcpp::depends(RcppArmadillo)]]\n// [[Rcpp::plugins(\"cpp11\")]]\n\nconst double radius = 6371009;\nconst double pi = 3.141593;\n\n// [[Rcpp::export]]\narma::vec gc_distance_pair_cpp(const arma::mat& coord1,const arma::mat& coord2) {\n\n  arma::uword n = coord2.n_rows;\n\n  arma::vec x1(n);\n  arma::vec y1(n);\n\n  arma::vec x2(n);\n  arma::vec y2(n);\n\n  x2 = coord2.col(0)*pi/180;\n  y2 = coord2.col(1)*pi/180;\n\n  x1 = coord1.col(0)*pi/180;\n  y1 = coord1.col(1)*pi/180;\n\n  arma::vec num = arma::sqrt(arma::square(arma::cos(y2)%arma::sin(arma::abs(x1-x2))) + arma::square(arma::cos(y1)%sin(y2) - arma::sin(y1)%arma::cos(y2)%arma::cos(arma::abs(x1-x2))));\n  arma::vec den = arma::sin(y1)%arma::sin(y2) + arma::cos(y1)%arma::cos(y2)%arma::cos(arma::abs(x1-x2));\n\n  return radius*arma::atan(num/den);\n}"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Ivann's blog",
+    "section": "",
+    "text": "PostgreSQL with R\n\n\n\n\n\n\n\npostgresql\n\n\nSQL\n\n\nrstats\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\nUsing open source data for web maps\n\n\n\n\n\n\n\nopenstreetmap\n\n\nmapping\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\nRegular expressions\n\n\n\n\n\n\n\nregex\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\nError handling in R\n\n\n\n\n\n\n\nexceptions\n\n\nerrors\n\n\nrstats\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\nWeb scrapping in R\n\n\n\n\n\n\n\nscrapping\n\n\nrstats\n\n\nmapping\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\nFast Distance rewriting in R with C++\n\n\n\n\n\n\n\ncpp\n\n\nrstats\n\n\ngis\n\n\n\n\n\n\n\n\n\n \n\n\n\n\nNo matching items"
+  }
+]
