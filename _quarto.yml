@@ -8,10 +8,10 @@ website:
       # - about.qmd
       - icon: github
         href: https://github.com/ischlo
-        # target: '_blank'
+        target: _blank
       - icon: twitter
-        href: https://twitter.com/irscar
-        # target: '_blank'
+        href: https://twitter.com/irscars
+        target: _blank
 execute:
   freeze: auto
 format:
