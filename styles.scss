@@ -1,7 +1,12 @@
 /* css styles */
 
-$body-bg: black
+/*-- scss:defaults --*/
+/* $body-bg: black; */
 
+$font-size-root: .8em;
+$cap-location: margin;
+
+/*-- scss:rules --*/
 * {
   font-family: 'Courier New', Helvetica, Monospace;
 }

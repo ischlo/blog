@@ -1,6 +1,5 @@
 project:
   type: website
-
 website:
   title: "Ivann's blog"
   navbar:
@@ -12,12 +11,13 @@ website:
       - icon: twitter
         href: https://twitter.com/irscars
         # target: _blank
-execute:
-  freeze: auto
 format:
   html:
-    theme: simplex
-    css: styles.scss
-
+    theme: 
+      - simplex
+      - styles.scss
+    # mainfont: 'Courier New'
+execute:
+  freeze: auto
 editor: visual
 
