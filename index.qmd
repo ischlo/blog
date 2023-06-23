@@ -10,7 +10,7 @@ listing:
   categories: cloud
   sort-ui: false
   filter-ui: false
-  max-description-length: 50
+  max-description-length: 80
   date-format: short
   fields: [title,categories,description,image]
 page-layout: full
