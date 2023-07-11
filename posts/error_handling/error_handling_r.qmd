@@ -1,0 +1,192 @@
+---
+title: "Error handling in R"
+# description: 'The typical errors of a programming workflow are seen and the best practive to avoid errors and build robust scritps is shown on the example of R programming.'
+author: "Ivann Schlosser"
+draft: false
+categories:
+  - rstats
+  - errors
+  - exceptions
+  - functions
+freeze: false
+---
+
+```{r setup, include=FALSE, echo=FALSE}
+
+# refer to https://bookdown.org/yihui/rmarkdown/template-structure.html
+library(formatR)
+knitr::opts_chunk$set(echo = TRUE
+                      ,eval = FALSE
+                      ,include = TRUE
+                      ,message = FALSE
+                      ,warning = FALSE
+                      ,fig_caption = FALSE
+                      ,out.width = "80%"
+                      ,fig.align = "center"
+                      # ,tidy = TRUE
+                      ,cache = FALSE)
+
+```
+
+# Introduction
+
+This blog post will cover exception/error handling in R. The main purpose of it is to ultimately build robust, fault proof scripts, that can be part of any workflow and be easily shared with others, via packages or version control and perform as expected in any situation or raise informative messages to the user as to the possible problems.
+
+Whether you are a researcher, a student, a software engineer, a data scientist, you will always encounter numerous bugs, errors and other types of unexpected behavior from your machine when coding. And while this is pretty much inevitable, there are good habits and tricks to learn in order to reduce the time spent figuring out, solving problems and anticipating troubles. Ultimately, the goal is to build efficient code, that is well commented, fault proof, easily reusable. All these aspects are important when developing software for personal use and be shared and used by others.
+
+So this post will focus on common mistakes that are encountered, the main things to keep in mind, how to build functions that do specifically what you ask them to every time, or notify you of what is wrong.
+
+This tutorial will provide examples in R, but the ideas covered apply more generally to problem solving and software development in many languages.
+
+# Context
+
+Errors in programming can occur due to various reasons, such as invalid inputs, missing files, network issues, or logical flaws. It is crucial to differentiate between different types of errors, such as syntax errors, runtime errors, and logical errors, as each requires a specific approach for effective error handling. More generally, they can be divided into two main categories, the first are errors occurring due to compilation/interpretation errors. They are exceptions due to invalid data types, Nan values or even typos making your code unable to run. The second are errors that occur when the output is not the desired one, they could be logical errors or typos as well. Let's look at the following example, in which we want to create a function that squares an input value:
+
+```{r eval=TRUE}
+square_wrong <- function(x) return(x*2)
+
+square_wrong(3)
+
+```
+
+Here, the error is in the code itself, but in what it does. Meaning that while the code will execute and produce an output, it will not be the desired one for us. In this case, the coder made a error of operator, putting a single `*` instead of `**` for the exponentiation.
+
+This example also illustrates the need for proper debugging of whatever you wrote, imagine if you created this function to square any numerical input, and then tested it only with the value `square(2)`. The output would meet your expectations this time, but then would cause unexpected behavior later on with other values.
+
+Now, with the error corrected, the function can still fail:
+
+```{r eval=TRUE, error=TRUE}
+square_basic <- function(x) return(x**2) # corrected mistake
+
+square_basic(3)
+
+square('a')
+
+```
+
+In this case, the error occurs from within the system because it does not know how to perform the task, the input provided to the function is not compatible with the type of operation we want to do on the data. The last error could for example occur in context where the data to be passed to the function was somehow compromised. Or if the input to the function is provided by a user inadvertently. Fortunately there are ways to minimize the consequences of that and we will look at them now.
+
+# Errors in R
+
+Being a very user friendly language, R does a lot in the background in order to make the user experience as comfortable as possible compared to other, mostly low level languages like C, C++, java etc... It resembles python in that sense. And a few other more modern languages that aim at being user friendly but also powerful, such as julia.
+
+Additionally, R is typically good for functional programming, in the sense that a typical workflow will focus on the functions applied to data, as opposed to object oriented programming ([OOP](https://en.wikipedia.org/wiki/Object-oriented_programming)), where the focus is more on defining objects with their attributes, methods, instances and interactions with other objects. However, handling exceptions is one of those areas where it is helpful to bear OOP concepts in mind. Some more aspects of R as a OO language will be covered in a future blog post. Generally, when an error occurs in a programming workflow, there will be a mechanism stopping the execution of a script, followed by the printing of an error message to the console. During that process, an *error* object is created containing the error message that will be printed, but it can also contain additional information on the log.
+
+## Helper functions
+
+In R, there is already implemented a mechanism that gives the programmer access to that logs from the low level code as to why an error occurred. Errors are returned as *objects* of class `try-error` and can be handled through the `tryCatch` function. It will attempt to run an expression provided as argument, and will catch the error objects in case of failures and provide access to the internals of the error. Let's look at it on the example of the previously defined function
+
+```{r eval=TRUE}
+tryCatch(
+  expr = square('3')
+  ,error = function(e) str(e)# paste0('Raised error : ',e)
+  ,warning = function(w) w
+)
+
+```
+
+This function is the backbone of error handling in R and it also has a few wrapper functions that help depending on the context of usage as we will see shortly. Now in order to make our original function more fault proof and usable, let's try to resolve potential issues, such as for example passing a string containing a number:
+
+```{r eval=TRUE}
+
+square_better <- function(x){
+  if(inherits(x,'character')) {
+    warning('attempting to convert input to numeric')
+    x <- as.numeric(x)
+  }
+  return(x**2)
+}
+
+tryCatch(
+  expr = square_better('3')
+  ,error = function(e) str(e)
+  ,warning = function(w) str(w)
+)
+
+```
+
+However, some errors might still arrise:
+
+```{r eval=TRUE, error=TRUE}
+
+square_better('r')
+
+
+tryCatch(
+  expr = square_better('r')
+  ,error = function(e)str(e)
+  ,warning = function(w)str(w)
+)
+
+
+```
+
+<!-- ```{r} -->
+
+<!-- x <- list(20, "20", c(1,2,"eoinrf","5nj4k"), "304", "4") -->
+
+<!-- typeof(x) -->
+
+<!-- mode(x) -->
+
+<!-- str(x) -->
+
+<!-- as.vector(x) -->
+
+<!-- lapply(x,typeof) -->
+
+<!-- is.vector(x) -->
+
+<!-- is.list(x) -->
+
+<!-- unlist(x) -->
+
+<!-- mode(unlist(x)) -->
+
+<!-- inherits(x, "list") -->
+
+<!-- inherits(x, "vector") -->
+
+<!-- class(x) -->
+
+<!-- is.atomic(x) -->
+
+<!-- is.atomic(unlist(x)) -->
+
+<!-- ``` -->
+
+<!-- ```{r} -->
+
+<!-- x <- 2 -->
+
+<!-- ex <- expression(x^2) -->
+
+<!-- parse(ex) -->
+
+<!-- eval(ex) -->
+
+<!-- ``` -->
+
+## Writing functions
+
+Let's look at the output of the following operation, it is intentionally misused to raise an error message:
+
+One of the most important elements of any good software is it's ability to put the user in a situation, where it is almost impossible to produce an error, and if an error still occurs somewhere, then the message associated to it should allow the user to straight away correct it.
+
+```{r}
+
+addition <- functino(x,y) {
+  return(x+y)
+}
+
+addition(1, "number")
+
+```
+
+# Sources
+
+This post is a compilation of personal experience and reading from these amazing sources:
+
+-   [Advanced R](https://adv-r.hadley.nz/debugging.html)
+-   [GeeksForGeeks](https://www.geeksforgeeks.org/handling-errors-in-r-programming/)
+-   [Mastering software development in R](https://bookdown.org/rdpeng/RProgDA/error-handling-and-generation.html)
