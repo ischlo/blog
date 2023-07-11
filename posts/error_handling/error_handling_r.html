@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.335">
+<meta name="generator" content="quarto-1.3.353">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -18,9 +18,10 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -47,43 +48,13 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -126,7 +97,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -137,23 +108,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <span class="navbar-title">Ivann’s blog</span>
     </a>
   </div>
+            <div id="quarto-search" class="" title="Search"></div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/ischlo"><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/ischlo" rel="" target=""><i class="bi bi-github" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/irscars"><i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://twitter.com/irscars" rel="" target=""><i class="bi bi-twitter" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
 </ul>
-              <div id="quarto-search" class="" title="Search"></div>
+            <div class="quarto-navbar-tools">
+</div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav>
@@ -164,9 +137,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <div class="quarto-title column-body">
       <h1 class="title">Error handling in R</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">exceptions</div>
-                <div class="quarto-category">errors</div>
                 <div class="quarto-category">rstats</div>
+                <div class="quarto-category">errors</div>
+                <div class="quarto-category">exceptions</div>
+                <div class="quarto-category">functions</div>
               </div>
                   </div>
   </div>
@@ -189,7 +163,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#context" id="toc-context" class="nav-link" data-scroll-target="#context">Context</a></li>
+  <li><a href="#errors-in-r" id="toc-errors-in-r" class="nav-link" data-scroll-target="#errors-in-r">Errors in R</a>
+  <ul class="collapse">
+  <li><a href="#helper-functions" id="toc-helper-functions" class="nav-link" data-scroll-target="#helper-functions">Helper functions</a></li>
+  <li><a href="#writing-functions" id="toc-writing-functions" class="nav-link" data-scroll-target="#writing-functions">Writing functions</a></li>
+  </ul></li>
+  <li><a href="#sources" id="toc-sources" class="nav-link" data-scroll-target="#sources">Sources</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -198,58 +187,133 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>This blog post will cover exception handling in R. The main purpose of it is to ultimately build robust, fault proof scripts, that can be part of your everyday workflow, but also be easily shared with others, via packages or version control and perform as expected in any situation or raise informative messages to the user as to the possible problems.</p>
-<p>Whether you are a researcher, a student, a software engineer, a data scientist, you will always encounter numerous bugs, errors and other types of unexpected behavior from your machine when working on code. And while this is pretty much inevitable, there are good habits and tricks to learn in order to reduce the time spent figuring out, solving problems. Ultimately, the goal is to build efficient code, that is well commented, fault proof, easily reusable, and user friendly. All these aspects are important when devellopping software that can ultimately be shared, and used by others.</p>
+<p>This blog post will cover exception/error handling in R. The main purpose of it is to ultimately build robust, fault proof scripts, that can be part of any workflow and be easily shared with others, via packages or version control and perform as expected in any situation or raise informative messages to the user as to the possible problems.</p>
+<p>Whether you are a researcher, a student, a software engineer, a data scientist, you will always encounter numerous bugs, errors and other types of unexpected behavior from your machine when coding. And while this is pretty much inevitable, there are good habits and tricks to learn in order to reduce the time spent figuring out, solving problems and anticipating troubles. Ultimately, the goal is to build efficient code, that is well commented, fault proof, easily reusable. All these aspects are important when developing software for personal use and be shared and used by others.</p>
 <p>So this post will focus on common mistakes that are encountered, the main things to keep in mind, how to build functions that do specifically what you ask them to every time, or notify you of what is wrong.</p>
-<p>This tutorial will be about R, but the general ideas covered apply more generally to problem solving and software development.</p>
+<p>This tutorial will provide examples in R, but the ideas covered apply more generally to problem solving and software development in many languages.</p>
 </section>
-<section id="section" class="level1">
-<h1></h1>
-<p>R being very user friendly, it does a lot in the background in order to make our user experience as comfortable as possible compared to other, more low level languages like C, C++, java etc… It resembles python in that sense. And a few other more modern languages that aim at being user friendly but also powerful, such as julia for example.</p>
+<section id="context" class="level1">
+<h1>Context</h1>
+<p>Errors in programming can occur due to various reasons, such as invalid inputs, missing files, network issues, or logical flaws. It is crucial to differentiate between different types of errors, such as syntax errors, runtime errors, and logical errors, as each requires a specific approach for effective error handling. More generally, they can be divided into two main categories, the first are errors occurring due to compilation/interpretation errors. They are exceptions due to invalid data types, Nan values or even typos making your code unable to run. The second are errors that occur when the output is not the desired one, they could be logical errors or typos as well. Let’s look at the following example, in which we want to create a function that squares an input value:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="dv">20</span>, <span class="st">"20"</span>, <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="st">"eoinrf"</span>,<span class="st">"5nj4k"</span>), <span class="st">"304"</span>, <span class="st">"4"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(x)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mode</span>(x)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(x)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">as.vector</span>(x)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(x,typeof)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">is.vector</span>(x)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">is.list</span>(x)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">unlist</span>(x)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">mode</span>(<span class="fu">unlist</span>(x))</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">inherits</span>(x, <span class="st">"list"</span>)</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">inherits</span>(x, <span class="st">"vector"</span>)</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(x)</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="fu">is.atomic</span>(x)</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="fu">is.atomic</span>(<span class="fu">unlist</span>(x))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>square_wrong <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">return</span>(x<span class="sc">*</span><span class="dv">2</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">square_wrong</span>(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 6</code></pre>
 </div>
+</div>
+<p>Here, the error is in the code itself, but in what it does. Meaning that while the code will execute and produce an output, it will not be the desired one for us. In this case, the coder made a error of operator, putting a single <code>*</code> instead of <code>**</code> for the exponentiation.</p>
+<p>This example also illustrates the need for proper debugging of whatever you wrote, imagine if you created this function to square any numerical input, and then tested it only with the value <code>square(2)</code>. The output would meet your expectations this time, but then would cause unexpected behavior later on with other values.</p>
+<p>Now, with the error corrected, the function can still fail:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">2</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>ex <span class="ot">&lt;-</span> <span class="fu">expression</span>(x<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">parse</span>(ex)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">eval</span>(ex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>square_basic <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">return</span>(x<span class="sc">**</span><span class="dv">2</span>) <span class="co"># corrected mistake</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">square_basic</span>(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 9</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">square</span>(<span class="st">'a'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in square("a"): could not find function "square"</code></pre>
+</div>
+</div>
+<p>In this case, the error occurs from within the system because it does not know how to perform the task, the input provided to the function is not compatible with the type of operation we want to do on the data. The last error could for example occur in context where the data to be passed to the function was somehow compromised. Or if the input to the function is provided by a user inadvertently. Fortunately there are ways to minimize the consequences of that and we will look at them now.</p>
+</section>
+<section id="errors-in-r" class="level1">
+<h1>Errors in R</h1>
+<p>Being a very user friendly language, R does a lot in the background in order to make the user experience as comfortable as possible compared to other, mostly low level languages like C, C++, java etc… It resembles python in that sense. And a few other more modern languages that aim at being user friendly but also powerful, such as julia.</p>
+<p>Additionally, R is typically good for functional programming, in the sense that a typical workflow will focus on the functions applied to data, as opposed to object oriented programming (<a href="https://en.wikipedia.org/wiki/Object-oriented_programming">OOP</a>), where the focus is more on defining objects with their attributes, methods, instances and interactions with other objects. However, handling exceptions is one of those areas where it is helpful to bear OOP concepts in mind. Some more aspects of R as a OO language will be covered in a future blog post. Generally, when an error occurs in a programming workflow, there will be a mechanism stopping the execution of a script, followed by the printing of an error message to the console. During that process, an <em>error</em> object is created containing the error message that will be printed, but it can also contain additional information on the log.</p>
+<section id="helper-functions" class="level2">
+<h2 class="anchored" data-anchor-id="helper-functions">Helper functions</h2>
+<p>In R, there is already implemented a mechanism that gives the programmer access to that logs from the low level code as to why an error occurred. Errors are returned as <em>objects</em> of class <code>try-error</code> and can be handled through the <code>tryCatch</code> function. It will attempt to run an expression provided as argument, and will catch the error objects in case of failures and provide access to the internals of the error. Let’s look at it on the example of the previously defined function</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tryCatch</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">expr =</span> <span class="fu">square</span>(<span class="st">'3'</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  ,<span class="at">error =</span> <span class="cf">function</span>(e) <span class="fu">str</span>(e)<span class="co"># paste0('Raised error : ',e)</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  ,<span class="at">warning =</span> <span class="cf">function</span>(w) w</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 2
+ $ message: chr "could not find function \"square\""
+ $ call   : language square("3")
+ - attr(*, "class")= chr [1:3] "simpleError" "error" "condition"</code></pre>
+</div>
+</div>
+<p>This function is the backbone of error handling in R and it also has a few wrapper functions that help depending on the context of usage as we will see shortly. Now in order to make our original function more fault proof and usable, let’s try to resolve potential issues, such as for example passing a string containing a number:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>square_better <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">inherits</span>(x,<span class="st">'character'</span>)) {</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">warning</span>(<span class="st">'attempting to convert input to numeric'</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    x <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(x)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(x<span class="sc">**</span><span class="dv">2</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="fu">tryCatch</span>(</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">expr =</span> <span class="fu">square_better</span>(<span class="st">'3'</span>)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  ,<span class="at">error =</span> <span class="cf">function</span>(e) <span class="fu">str</span>(e)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  ,<span class="at">warning =</span> <span class="cf">function</span>(w) <span class="fu">str</span>(w)</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 2
+ $ message: chr "attempting to convert input to numeric"
+ $ call   : language square_better("3")
+ - attr(*, "class")= chr [1:3] "simpleWarning" "warning" "condition"</code></pre>
+</div>
+</div>
+<p>However, some errors might still arrise:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">square_better</span>(<span class="st">'r'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NA</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tryCatch</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">expr =</span> <span class="fu">square_better</span>(<span class="st">'r'</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  ,<span class="at">error =</span> <span class="cf">function</span>(e)<span class="fu">str</span>(e)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  ,<span class="at">warning =</span> <span class="cf">function</span>(w)<span class="fu">str</span>(w)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 2
+ $ message: chr "attempting to convert input to numeric"
+ $ call   : language square_better("r")
+ - attr(*, "class")= chr [1:3] "simpleWarning" "warning" "condition"</code></pre>
+</div>
+</div>
+<!-- ```{r} -->
+<!-- x <- list(20, "20", c(1,2,"eoinrf","5nj4k"), "304", "4") -->
+<!-- typeof(x) -->
+<!-- mode(x) -->
+<!-- str(x) -->
+<!-- as.vector(x) -->
+<!-- lapply(x,typeof) -->
+<!-- is.vector(x) -->
+<!-- is.list(x) -->
+<!-- unlist(x) -->
+<!-- mode(unlist(x)) -->
+<!-- inherits(x, "list") -->
+<!-- inherits(x, "vector") -->
+<!-- class(x) -->
+<!-- is.atomic(x) -->
+<!-- is.atomic(unlist(x)) -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- x <- 2 -->
+<!-- ex <- expression(x^2) -->
+<!-- parse(ex) -->
+<!-- eval(ex) -->
+<!-- ``` -->
+</section>
 <section id="writing-functions" class="level2">
 <h2 class="anchored" data-anchor-id="writing-functions">Writing functions</h2>
 <p>Let’s look at the output of the following operation, it is intentionally misused to raise an error message:</p>
 <p>One of the most important elements of any good software is it’s ability to put the user in a situation, where it is almost impossible to produce an error, and if an error still occurs somewhere, then the message associated to it should allow the user to straight away correct it.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>addition <span class="ot">&lt;-</span> <span class="fu">functino</span>(x,y) {</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(x<span class="sc">+</span>y)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">addition</span>(<span class="dv">1</span>, <span class="st">"number"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>addition <span class="ot">&lt;-</span> <span class="fu">functino</span>(x,y) {</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(x<span class="sc">+</span>y)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">addition</span>(<span class="dv">1</span>, <span class="st">"number"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -293,9 +357,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -360,6 +438,92 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
