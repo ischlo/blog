@@ -12,7 +12,7 @@ listing:
   filter-ui: false
   max-description-length: 80
   date-format: short
-  fields: [title,categories,description,image]
+  fields: [title,categories] # image description,
 page-layout: full
 title-block-banner: false
 ---

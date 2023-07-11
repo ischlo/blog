@@ -11,7 +11,6 @@ website:
       - icon: twitter
         href: https://twitter.com/irscars
         # target: _blank
-      
 format:
   html:
     theme: 
