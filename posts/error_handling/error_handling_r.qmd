@@ -1,6 +1,5 @@
 ---
 title: "Error handling in R"
-# description: 'The typical errors of a programming workflow are seen and the best practive to avoid errors and build robust scritps is shown on the example of R programming.'
 author: "Ivann Schlosser"
 draft: true
 categories:
