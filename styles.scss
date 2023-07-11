@@ -3,7 +3,7 @@
 /*-- scss:defaults --*/
 /* $body-bg: black; */
 
-$font-size-root: .8em;
+$font-size-root: 1em;
 $cap-location: margin;
 
 /*-- scss:rules --*/
@@ -11,6 +11,7 @@ $cap-location: margin;
   font-family:  Helvetica, Monospace, 'Courier New';
 }
 
+/*
 .footer {
   text-align: center;
 }
@@ -18,6 +19,7 @@ $cap-location: margin;
 .footer_author {
   text-align: center;
 }
+*/
 
 h1 {
   font-size: 30px;
