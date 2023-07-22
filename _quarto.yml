@@ -1,7 +1,7 @@
 project:
   type: website
 website:
-  title: "Ivann's blog"
+  title: "Blog"
   navbar:
     right:
       # - about.qmd
@@ -17,6 +17,7 @@ format:
       - simplex
       - styles.scss
     # mainfont: 'Courier New'
+    max-width: '1000px'
 execute:
   freeze: auto
 editor: visual

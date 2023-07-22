@@ -1,6 +1,7 @@
 ---
 title: "Web scrapping in R"
 author: "Ivann Schlosser"
+description: 'When information is hard to get a hand on, consider scrapping it'
 categories:
   - scrapping
   - rstats

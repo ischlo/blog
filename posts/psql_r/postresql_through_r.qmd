@@ -1,6 +1,7 @@
 ---
 title: "PostgreSQL with R"
 author: "Ivann Schlosser"
+description: 'Scaling up data capabilities with few tools'
 draft: true
 categories:
   - postgresql

@@ -2,8 +2,6 @@
 # title: "Blog"
 listing:
   max-items: 10
-  image-align: right
-  # image-placeholder:
   contents: posts
   sort: "date desc"
   type: default
@@ -12,7 +10,9 @@ listing:
   filter-ui: false
   max-description-length: 80
   date-format: short
-  fields: [title,categories] # image description,
+  fields: [title,categories,description,image] # description,
+  image-align: right
+  # image-height: '150px'
 page-layout: full
 title-block-banner: false
 ---

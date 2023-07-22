@@ -1,12 +1,14 @@
 ---
 title: "Regular expressions"
 author: "Ivann Schlosser"
+description: 'Extracting patterns of characters from noisy inputs'
 draft: false
 categories:
   - rstats
   - regex
   - data_engineering
-freeze: true
+freeze: false
+image: 'regex.png'
 ---
 
 ```{r setup, include=FALSE, echo=FALSE}

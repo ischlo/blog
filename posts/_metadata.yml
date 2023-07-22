@@ -6,7 +6,7 @@ freeze: false
 
 # Enable banner style title blocks
 title-block-banner: true
-highlight-style: github
+highlight-style: tango
 toc: true
 toc-depth: 2
 editor_options: 

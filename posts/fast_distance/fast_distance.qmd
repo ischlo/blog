@@ -1,11 +1,14 @@
 ---
 title: "Fast Distance rewriting in R with C++"
 author: "Ivann Schlosser"
+description: 'Making great circle distance computations fast.'
 categories:
   - cpp
   - rstats 
   - gis
 freeze: true
+image: 'great_circ_dist.png'
+image-height: '100px'
 ---
 
 ```{r setup, include=FALSE, echo=FALSE}
