@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Ivann Schlosser">
+<meta name="description" content="Making great circle distance computations fast.">
 
-<title>Ivann’s blog - Fast Distance rewriting in R with C++</title>
+<title>Blog - Fast Distance rewriting in R with C++</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -107,7 +108,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
     <a class="navbar-brand" href="../../index.html">
-    <span class="navbar-title">Ivann’s blog</span>
+    <span class="navbar-title">Blog</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -138,7 +139,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
       <h1 class="title">Fast Distance rewriting in R with C++</h1>
-                                <div class="quarto-categories">
+                  <div>
+        <div class="description">
+          Making great circle distance computations fast.
+        </div>
+      </div>
+                          <div class="quarto-categories">
                 <div class="quarto-category">cpp</div>
                 <div class="quarto-category">rstats</div>
                 <div class="quarto-category">gis</div>
@@ -277,9 +283,9 @@ Geodetic CRS:  WGS 84</code></pre>
 <span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>benchmark_r_cpp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Unit: microseconds
-         expr       min        lq       mean    median         uq        max
- cpp_distance   814.342   818.729   893.3449   843.616    875.186   1323.767
-  sf_distance 66431.808 67874.926 86249.5147 68582.012 109058.729 126514.766
+         expr      min        lq      mean    median         uq        max
+ cpp_distance   780.23   783.633   844.026   785.724    840.377   1244.842
+  sf_distance 65565.23 66039.848 83599.496 66962.594 106447.603 120013.970
  neval
     10
     10</code></pre>
