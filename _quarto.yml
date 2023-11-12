@@ -11,6 +11,14 @@ website:
       - icon: twitter
         href: https://twitter.com/irscars
         # target: _blank
+  
+  cookie-consent: 
+    type: 'implied'
+    style: 'simple'
+    palette: 'light'
+  google-analytics: 
+    tracking-id: 'G-SP3R7RK14H'
+    anonymize-ip: true
 format:
   html:
     theme: 

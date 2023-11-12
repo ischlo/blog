@@ -1,11 +1,13 @@
 ---
 title: "Using open source data for web maps"
 author: "Ivann Schlosser"
+description: 'If one day you want a map of all the tennis courts in an area'
 draft: false
 categories:
   - openstreetmap
   - mapping
 freeze: true
+image: 'tennis_image.jpg'
 ---
 
 ```{r setup, include=FALSE, echo=FALSE}
