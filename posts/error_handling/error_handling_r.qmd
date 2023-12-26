@@ -1,7 +1,7 @@
 ---
 title: "Error handling in R"
 author: "Ivann Schlosser"
-draft: true
+draft: false
 categories:
   - rstats
   - errors
@@ -47,7 +47,7 @@ square_wrong(3)
 
 ```
 
-Here, the error is in the code itself, but in what it does. Meaning that while the code will execute and produce an output, it will not be the desired one for us. In this case, the coder made a error of operator, putting a single `*` instead of `**` for the exponentiation.
+Here, the error is not in the code itself, but in the operation it does. Meaning that while the code will execute and produce an output, it will not be the desired one for us. In this case, the coder made an error of operator, putting a single `*` instead of `**` for the exponentiation.
 
 This example also illustrates the need for proper debugging of whatever you wrote, imagine if you created this function to square any numerical input, and then tested it only with the value `square(2)`. The output would meet your expectations this time, but then would cause unexpected behavior later on with other values.
 
@@ -58,7 +58,7 @@ square_basic <- function(x) return(x**2) # corrected mistake
 
 square_basic(3)
 
-square('a')
+square_basic('a')
 
 ```
 
@@ -72,7 +72,7 @@ Additionally, R is typically good for functional programming, in the sense that 
 
 ## Helper functions
 
-In R, there is already implemented a mechanism that gives the programmer access to that logs from the low level code as to why an error occurred. Errors are returned as *objects* of class `try-error` and can be handled through the `tryCatch` function. It will attempt to run an expression provided as argument, and will catch the error objects in case of failures and provide access to the internals of the error. Let's look at it on the example of the previously defined function
+In R, a mechanism is implemented to give the programmer access to the error logs from the low level code. Errors are returned as *objects* of class `try-error` and can be handled through the `tryCatch` function. It will attempt to run an expression provided as argument, and will catch the error objects in case of failures and provide access to the internals of the error. Let's look at it on the example of the previously defined function
 
 ```{r eval=TRUE}
 tryCatch(
@@ -103,21 +103,57 @@ tryCatch(
 
 ```
 
-However, some errors might still arrise:
+However, some errors might still occur:
 
 ```{r eval=TRUE, error=TRUE}
 
 square_better('r')
 
-
 tryCatch(
   expr = square_better('r')
-  ,error = function(e)str(e)
-  ,warning = function(w)str(w)
+  ,error = function(e) str(e)
+  ,warning = function(w) str(w)
 )
 
 
 ```
+
+In this case, the input can not be converted to a type compatible with the operatino we want to perform, so in this case there is not much further to do, therefore, the function needs to stop in a safe way and notify the user of the problem. Stopping in a safe way means halting the execution of the program without compromising the provided data or the following steps. 
+
+Let's see what would be an optimal way to write this function:
+
+```{r eval=TRUE}
+
+square_best <- function(x){
+  if(inherits(x,'character')) {
+    warning('attempting to convert input to numeric')
+    x <- tryCatch(as.numeric(x)
+                  ,error = \(e) cat('error of execution, evaluation returned ',e)
+                  # ,warning = \(w) cat('warning during execution',w)
+                  ,finally = print('execution problem in square_best')
+                  )
+  }
+  return(x**2)
+}
+
+
+square_best('r')
+
+```
+
+Here, we included a `tryCatch` call inside the function to respond to erroneous inputs. While if the input is good, no problems will be printed as the tryCatch call simply returns the desired value:
+
+```{r eval=TRUE}
+
+square_best(3)
+
+```
+
+No error !
+
+## Conclusion
+
+This post covers a good approach to building fault proof functions on the seemingly simple example of the squaring operation.
 
 <!-- ```{r} -->
 
@@ -165,21 +201,21 @@ tryCatch(
 
 <!-- ``` -->
 
-## Writing functions
+<!-- ## Writing functions -->
 
-Let's look at the output of the following operation, it is intentionally misused to raise an error message:
+<!-- Let's look at the output of the following operation, it is intentionally misused to raise an error message: -->
 
-One of the most important elements of any good software is it's ability to put the user in a situation, where it is almost impossible to produce an error, and if an error still occurs somewhere, then the message associated to it should allow the user to straight away correct it.
+<!-- One of the most important elements of any good software is it's ability to put the user in a situation, where it is almost impossible to produce an error, and if an error still occurs somewhere, then the message associated to it should allow the user to straight away correct it. -->
 
-```{r}
+<!-- ```{r} -->
 
-addition <- functino(x,y) {
-  return(x+y)
-}
+<!-- addition <- functino(x,y) { -->
+<!--   return(x+y) -->
+<!-- } -->
 
-addition(1, "number")
+<!-- addition(1, "number") -->
 
-```
+<!-- ``` -->
 
 # Sources
 

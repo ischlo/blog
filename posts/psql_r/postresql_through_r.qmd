@@ -31,7 +31,7 @@ This tutorial will present a straightforward way to get started with databases u
 
 # Type of database
 
-There are several types of opensource data bases that all have great performances and functions. Some are better suited for certain tasks than other, and in this tutorial we will use PostgreSQL which is very good for all the regular operations on data sets, has a great set of packages that build the bridge with R, and also can be quite easily transformed into spatial databases for operations with geometries and coordinates, thanks to an extension called [postgis](https://postgis.net).
+There are several types of opensource data bases that all have great performances and functions. Some are better suited for certain tasks than other, and in this tutorial we will use PostgreSQL which is very good for all the regular operations on data sets, has a great set of packages that build the bridge with R, and also can be quite easily transformed into a spatial database for operations with geometries and coordinates, thanks to an extension called [postgis](https://postgis.net).
 
 # Packages
 
@@ -51,7 +51,7 @@ library(microbenchmark)
 
 # Installation
 
-This part of the tutorial is relevant for mac users, the steps to install postgres or sqlite on windows will be different. Every mac computer comes with SQLite preinstalled, you need, however to set up postgres by hand. The first step to do so is to install a package manager if not already done. On mac, homebrew is probably the most popular one, you can find the instructions on the [website](https://brew.sh). It takes only a few terminal commands to do so. Once it is installed, your R environment should be able to find it by itself.
+This part of the tutorial is relevant for mac users, the steps to install postgres or sqlite on windows will be different. Every mac computer comes with SQLite installed, you need, however to set up postgres by hand. The first step to do so is to install a package manager if not already done. On mac, homebrew is probably the most popular one, you can find the instructions on the [brew website](https://brew.sh). It takes only a few terminal commands to do so. Once it is installed, your R environment should be able to find it by itself.
 
 You can also check that the installation went well by entering the following command in the terminal:
 
@@ -59,11 +59,11 @@ You can also check that the installation went well by entering the following com
 psql
 ```
 
-This will open a postgres interface in the terminal, you can already do all the data base tasks you want in this window, however, some more user friendly software has been developed to access your postgres database such as [Postico](https://eggerapps.at/postico2/) or for a much greater set of possibilities [PgAdmin](https://www.pgadmin.org). These softwares are usually refered to as **clients**, for more on this refer to [this](https://wiki.postgresql.org/wiki/PostgreSQL_Clients) wiki for example.
+This will open a postgres interface in the terminal, you can already do all the data base tasks you want in this window, however, some more user friendly software has been developed to access your postgres database such as [Postico](https://eggerapps.at/postico2/) or for a much greater set of possibilities [PgAdmin](https://www.pgadmin.org). These apps are usually reffered to as *clients*, for more on them refer to [this](https://wiki.postgresql.org/wiki/PostgreSQL_Clients) wiki for example.
 
 # Database set-up
 
-We now need to create the database that we will use to store and manipulate the data. For each R command to do something on the data base, a plain SQL command to be run through a database client or simply in the terminal will be shown. Since SQLite is by default present on mac machines, it is usually a bit easier to use, we will stick to postgres and for that will need to perform a first step in the terminal before. If you are using Rstudio, you can simply click on the terminal window, which usually is located right under the frame for text editing. Type this into the terminal `{bash} createdb test_db`. This will create the simplest database. In general, wou will want to add some constraints, such as a user, an administrator, and create a certain level of protection of your data base. These steps can be the topic of another tutorial, but for now, we will keep it simple. We now have a data base and can connect to it through R and through the terminal.
+We now need to create the database that we will use to store and manipulate the data. For each R command to do something on the data base, a plain SQL command to be run through a database client or simply in the terminal will be shown. Since SQLite is by default present on mac machines, it is usually a bit easier to use, we will stick to postgres and for that will need to perform a first step in the terminal before. If you are using Rstudio, you can simply click on the terminal window, which usually is located right under the frame for text editing. Type this into the terminal `{bash} createdb test_db`. This will create the simplest database. In general, you will want to add some constraints, such as a user, an administrator, and create a certain level of protection of your data base. These steps can be the topic of another tutorial, but for now, we will keep it simple. We now have a data base and can connect to it through R and through the terminal.
 
 ```{r}
 con <- DBI::dbConnect(PostgreSQL()
@@ -77,17 +77,26 @@ We create an object representing a connection to the database, which we will the
 dbListTables(con) # it should work but return an empty character !!
 ```
 
-And in the terminal you can type `{bash} psql test_db` to access the database, you will notice your command line changing, and then type the meta command, which is proper to psql that shows you the tables in your db `\dt`.
+And in the terminal you can type `{bash} psql test_db` to access the database, you will notice your command line changing, and then type the meta command (notice the escape character `\` ), which is specific to psql that shows you the tables in your db `\dt`.
 
 # Data Set
 
-Databases will prove particularly useful when data sets become increasingly big, and when we will only need a fraction of the data for our current analysis. Let's choose a data set big enough to prove this point, but not to big either.
+Databases will prove particularly useful when data sets become increasingly big, when tables will be linked with each other through the variables they contain etc... And we will be able to load only a fraction of it into our environment to remain efficient. Let's choose a data set big enough to prove this point, but not to big either.
 
 ```{r}
 
 flows <- readr::read_csv("/Users/ivann/Documents/CASA_quant/data/wu03uk_tidy.csv")
 
 ```
+
+Go on and load any big table of your own alternatively !
+Here is a list of websites with open source data sets for inspiration:
+
+* [https://datasetsearch.research.google.com](https://datasetsearch.research.google.com)
+* [https://www.kaggle.com](https://www.kaggle.com)
+* [https://data.world](https://data.world)
+* [https://www.pangaea.de](https://www.pangaea.de)
+* [https://www.worldpop.org](https://www.worldpop.org)
 
 ```{r results = 'asis',echo=FALSE}
 
@@ -97,15 +106,13 @@ knitr::kable(head(flows)
 
 ```
 
-Let's see the dimensions of the dataset:
+Let's see the dimensions of the data set:
 
 ```{r}
 
 dim(flows)
 
 ```
-
-it's a pretty big data set !
 
 # Importing data
 
