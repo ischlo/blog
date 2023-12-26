@@ -221,7 +221,7 @@ cookieconsent.run({
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>Everyone in the R community is probably familiar with the great sf package. It allows you to do pretty much any operations with geometries, and works very well with the tidyverse packages, data.table.</p>
+<p>Everyone in the R community is probably familiar with the great <a href="https://r-spatial.github.io/sf/"><strong>sf</strong></a> package. It allows you to do pretty much any operations with geometries, and works very well with the tidyverse packages and <a href="https://r-datatable.com"><strong>data.table</strong></a>.</p>
 </section>
 <section id="rcpp-and-rcpparmadillo" class="level1">
 <h1>Rcpp and RcppArmadillo</h1>
@@ -310,9 +310,9 @@ Geodetic CRS:  WGS 84</code></pre>
 <span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>benchmark_r_cpp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Unit: microseconds
-         expr      min        lq      mean    median         uq        max
- cpp_distance   780.23   783.633   844.026   785.724    840.377   1244.842
-  sf_distance 65565.23 66039.848 83599.496 66962.594 106447.603 120013.970
+         expr      min        lq       mean   median         uq        max
+ cpp_distance   780.23   797.655   878.3512   820.41    882.894   1344.964
+  sf_distance 66743.94 67034.713 85969.2223 68281.73 107724.671 129492.309
  neval
     10
     10</code></pre>

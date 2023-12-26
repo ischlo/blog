@@ -32,7 +32,7 @@
     "href": "posts/regex/reg_expressions.html",
     "title": "Regular expressions",
     "section": "",
-    "text": "This tutorial will introduce the basics of regular expressions, through some initial considerations and then concrete examples of varying difficulty."
+    "text": "This tutorial will introduce the basics of regular expressions, through general considerations and then concrete examples of varying difficulty."
   },
   {
     "objectID": "posts/regex/reg_expressions.html#categories-of-characters",
@@ -40,6 +40,27 @@
     "title": "Regular expressions",
     "section": "Categories of characters",
     "text": "Categories of characters\nThe following table presents a non-exhaustive set of character categories:\n\n\n\n\n\n\n\n\n\n\n\nCategory\nSymbol\nExample\nOpposite\nSymbol\nExample\n\n\n\n\nnumbers\n\\d\n12387\nnon-numbers\n\\D\n:-dfv*\n\n\nletters (lower case)\n[a-z]\njsknvs\nletters (upper case)\n[A-Z]\nSDFVM\n\n\nletters (lower & upper)\n[a-zA-Z]\nfvFVDf\n-\n-\n-\n\n\nnumbers & letters\n[:alphanum:]\n3k4rF4\n-\n-\n-\n\n\nwords\n\\w\nHello\nnon-words\n\\W\n!\n\n\nwhitespace\n\\s\n” ”\nnon whitespace\n\\S\n“kj4&n”\n\n\nboundaries of words\n\\b\n_hello_\ninterior of words\n\\B\nh_e_l_l_o\n\n\n\nAs you can see, some categories have a designated letter, but in other cases they can be designated by placing the characters of interest between square braquets. This allows to customize and create your own categories of regexes suitable for your specific needs. For example, let’s say you want to find numbers or the letter h, this would look like [\\dh]. Inversely, if you want to match for everything except those characters, place the ^ in front of the others: [^\\dh].\nOther symbols help us with specifying repetitions, or ordering:\n\nPositioning\n\n^ : beginning of sequence, ^\\d\n\\$ : end of sequence, \\dh\\$\n\nRepetition\n\n* : zero or more times\n+ : one or more time\n{min, max} : minimal and maximal number of repetitions\n{n} : match exactly n times\n\nAny symbol\n\n. : match any symbol\n? : match potentially a symbol\n\nGroups\n\n() : group elements\n\nLogical\n\n| : logical or\n\n\nIt is possible to group several characters by enclosing them into round brackets(). This will treat whatever is inside them as one single block of characters. We can include any of the mentioned regex symbols within them, particularly the logical or that can help with differentiating cases."
+  },
+  {
+    "objectID": "posts/error_handling/error_handling_r.html",
+    "href": "posts/error_handling/error_handling_r.html",
+    "title": "Error handling in R",
+    "section": "",
+    "text": "This blog post will cover exception/error handling in R. The main purpose of it is to ultimately build robust, fault proof scripts, that can be part of any workflow and be easily shared with others, via packages or version control and perform as expected in any situation or raise informative messages to the user as to the possible problems.\nWhether you are a researcher, a student, a software engineer, a data scientist, you will always encounter numerous bugs, errors and other types of unexpected behavior from your machine when coding. And while this is pretty much inevitable, there are good habits and tricks to learn in order to reduce the time spent figuring out, solving problems and anticipating troubles. Ultimately, the goal is to build efficient code, that is well commented, fault proof, easily reusable. All these aspects are important when developing software for personal use and be shared and used by others.\nSo this post will focus on common mistakes that are encountered, the main things to keep in mind, how to build functions that do specifically what you ask them to every time, or notify you of what is wrong.\nThis tutorial will provide examples in R, but the ideas covered apply more generally to problem solving and software development in many languages."
+  },
+  {
+    "objectID": "posts/error_handling/error_handling_r.html#helper-functions",
+    "href": "posts/error_handling/error_handling_r.html#helper-functions",
+    "title": "Error handling in R",
+    "section": "Helper functions",
+    "text": "Helper functions\nIn R, a mechanism is implemented to give the programmer access to the error logs from the low level code. Errors are returned as objects of class try-error and can be handled through the tryCatch function. It will attempt to run an expression provided as argument, and will catch the error objects in case of failures and provide access to the internals of the error. Let’s look at it on the example of the previously defined function\n\ntryCatch(\n  expr = square('3')\n  ,error = function(e) str(e)# paste0('Raised error : ',e)\n  ,warning = function(w) w\n)\n\nList of 2\n $ message: chr \"could not find function \\\"square\\\"\"\n $ call   : language square(\"3\")\n - attr(*, \"class\")= chr [1:3] \"simpleError\" \"error\" \"condition\"\n\n\nThis function is the backbone of error handling in R and it also has a few wrapper functions that help depending on the context of usage as we will see shortly. Now in order to make our original function more fault proof and usable, let’s try to resolve potential issues, such as for example passing a string containing a number:\n\nsquare_better &lt;- function(x){\n  if(inherits(x,'character')) {\n    warning('attempting to convert input to numeric')\n    x &lt;- as.numeric(x)\n  }\n  return(x**2)\n}\n\ntryCatch(\n  expr = square_better('3')\n  ,error = function(e) str(e)\n  ,warning = function(w) str(w)\n)\n\nList of 2\n $ message: chr \"attempting to convert input to numeric\"\n $ call   : language square_better(\"3\")\n - attr(*, \"class\")= chr [1:3] \"simpleWarning\" \"warning\" \"condition\"\n\n\nHowever, some errors might still occur:\n\nsquare_better('r')\n\n[1] NA\n\ntryCatch(\n  expr = square_better('r')\n  ,error = function(e) str(e)\n  ,warning = function(w) str(w)\n)\n\nList of 2\n $ message: chr \"attempting to convert input to numeric\"\n $ call   : language square_better(\"r\")\n - attr(*, \"class\")= chr [1:3] \"simpleWarning\" \"warning\" \"condition\"\n\n\nIn this case, the input can not be converted to a type compatible with the operatino we want to perform, so in this case there is not much further to do, therefore, the function needs to stop in a safe way and notify the user of the problem. Stopping in a safe way means halting the execution of the program without compromising the provided data or the following steps.\nLet’s see what would be an optimal way to write this function:\n\nsquare_best &lt;- function(x){\n  if(inherits(x,'character')) {\n    warning('attempting to convert input to numeric')\n    x &lt;- tryCatch(as.numeric(x)\n                  ,error = \\(e) cat('error of execution, evaluation returned ',e)\n                  # ,warning = \\(w) cat('warning during execution',w)\n                  ,finally = print('execution problem in square_best')\n                  )\n  }\n  return(x**2)\n}\n\n\nsquare_best('r')\n\n[1] \"execution problem in square_best\"\n\n\n[1] NA\n\n\nHere, we included a tryCatch call inside the function to respond to erroneous inputs. While if the input is good, no problems will be printed as the tryCatch call simply returns the desired value:\n\nsquare_best(3)\n\n[1] 9\n\n\nNo error !"
+  },
+  {
+    "objectID": "posts/error_handling/error_handling_r.html#conclusion",
+    "href": "posts/error_handling/error_handling_r.html#conclusion",
+    "title": "Error handling in R",
+    "section": "Conclusion",
+    "text": "Conclusion\nThis post covers a good approach to building fault proof functions on the seemingly simple example of the squaring operation."
   },
   {
     "objectID": "posts/michelin_web_scrapping/michelin_data_engineering.html",
@@ -67,7 +88,7 @@
     "href": "posts/fast_distance/fast_distance.html",
     "title": "Fast Distance rewriting in R with C++",
     "section": "",
-    "text": "Everyone in the R community is probably familiar with the great sf package. It allows you to do pretty much any operations with geometries, and works very well with the tidyverse packages, data.table."
+    "text": "Everyone in the R community is probably familiar with the great sf package. It allows you to do pretty much any operations with geometries, and works very well with the tidyverse packages and data.table."
   },
   {
     "objectID": "posts/fast_distance/fast_distance.html#rewriting-numerically-in-c",
@@ -81,6 +102,6 @@
     "href": "index.html",
     "title": "Blog",
     "section": "",
-    "text": "Using open source data for web maps\n\n\n\n\n\n\n\nopenstreetmap\n\n\nmapping\n\n\n\n\nIf one day you want a map of all the tennis courts in an area\n\n\n\n\n \n\n\n\n\n  \n\n\n\n\nRegular expressions\n\n\n\n\n\n\n\nrstats\n\n\nregex\n\n\ndata_engineering\n\n\n\n\nExtracting patterns of characters from noisy inputs\n\n\n\n\n \n\n\n\n\n  \n\n\n\n\nWeb scrapping in R\n\n\n\n\n\n\n\nscrapping\n\n\nrstats\n\n\nmapping\n\n\n\n\nWhen information is hard to get a hand on, consider scrapping it\n\n\n\n\n \n\n\n\n\n  \n\n\n\n\nFast Distance rewriting in R with C++\n\n\n\n\n\n\n\ncpp\n\n\nrstats\n\n\ngis\n\n\n\n\nMaking great circle distance computations fast.\n\n\n\n\n \n\n\n\n\nNo matching items"
+    "text": "Using open source data for web maps\n\n\n\n\n\n\n\nopenstreetmap\n\n\nmapping\n\n\n\n\nIf one day you want a map of all the tennis courts in an area\n\n\n\n\n \n\n\n\n\n  \n\n\n\n\nRegular expressions\n\n\n\n\n\n\n\nrstats\n\n\nregex\n\n\ndata_engineering\n\n\n\n\nExtracting patterns of characters from noisy inputs\n\n\n\n\n \n\n\n\n\n  \n\n\n\n\nError handling in R\n\n\n\n\n\n\n\nrstats\n\n\nerrors\n\n\nexceptions\n\n\nfunctions\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n  \n\n\n\n\nWeb scrapping in R\n\n\n\n\n\n\n\nscrapping\n\n\nrstats\n\n\nmapping\n\n\n\n\nWhen information is hard to get a hand on, consider scrapping it\n\n\n\n\n \n\n\n\n\n  \n\n\n\n\nFast Distance rewriting in R with C++\n\n\n\n\n\n\n\ncpp\n\n\nrstats\n\n\ngis\n\n\n\n\nMaking great circle distance computations fast.\n\n\n\n\n \n\n\n\n\nNo matching items"
   }
 ]

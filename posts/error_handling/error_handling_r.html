@@ -200,7 +200,7 @@ cookieconsent.run({
   <li><a href="#errors-in-r" id="toc-errors-in-r" class="nav-link" data-scroll-target="#errors-in-r">Errors in R</a>
   <ul class="collapse">
   <li><a href="#helper-functions" id="toc-helper-functions" class="nav-link" data-scroll-target="#helper-functions">Helper functions</a></li>
-  <li><a href="#writing-functions" id="toc-writing-functions" class="nav-link" data-scroll-target="#writing-functions">Writing functions</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   </ul></li>
   <li><a href="#sources" id="toc-sources" class="nav-link" data-scroll-target="#sources">Sources</a></li>
   </ul>
@@ -230,7 +230,7 @@ cookieconsent.run({
 <pre><code>[1] 6</code></pre>
 </div>
 </div>
-<p>Here, the error is in the code itself, but in what it does. Meaning that while the code will execute and produce an output, it will not be the desired one for us. In this case, the coder made a error of operator, putting a single <code>*</code> instead of <code>**</code> for the exponentiation.</p>
+<p>Here, the error is not in the code itself, but in the operation it does. Meaning that while the code will execute and produce an output, it will not be the desired one for us. In this case, the coder made an error of operator, putting a single <code>*</code> instead of <code>**</code> for the exponentiation.</p>
 <p>This example also illustrates the need for proper debugging of whatever you wrote, imagine if you created this function to square any numerical input, and then tested it only with the value <code>square(2)</code>. The output would meet your expectations this time, but then would cause unexpected behavior later on with other values.</p>
 <p>Now, with the error corrected, the function can still fail:</p>
 <div class="cell" data-layout-align="center">
@@ -240,9 +240,9 @@ cookieconsent.run({
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 9</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">square</span>(<span class="st">'a'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">square_basic</span>(<span class="st">'a'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
-<pre><code>Error in square("a"): could not find function "square"</code></pre>
+<pre><code>Error in x^2: non-numeric argument to binary operator</code></pre>
 </div>
 </div>
 <p>In this case, the error occurs from within the system because it does not know how to perform the task, the input provided to the function is not compatible with the type of operation we want to do on the data. The last error could for example occur in context where the data to be passed to the function was somehow compromised. Or if the input to the function is provided by a user inadvertently. Fortunately there are ways to minimize the consequences of that and we will look at them now.</p>
@@ -253,7 +253,7 @@ cookieconsent.run({
 <p>Additionally, R is typically good for functional programming, in the sense that a typical workflow will focus on the functions applied to data, as opposed to object oriented programming (<a href="https://en.wikipedia.org/wiki/Object-oriented_programming">OOP</a>), where the focus is more on defining objects with their attributes, methods, instances and interactions with other objects. However, handling exceptions is one of those areas where it is helpful to bear OOP concepts in mind. Some more aspects of R as a OO language will be covered in a future blog post. Generally, when an error occurs in a programming workflow, there will be a mechanism stopping the execution of a script, followed by the printing of an error message to the console. During that process, an <em>error</em> object is created containing the error message that will be printed, but it can also contain additional information on the log.</p>
 <section id="helper-functions" class="level2">
 <h2 class="anchored" data-anchor-id="helper-functions">Helper functions</h2>
-<p>In R, there is already implemented a mechanism that gives the programmer access to that logs from the low level code as to why an error occurred. Errors are returned as <em>objects</em> of class <code>try-error</code> and can be handled through the <code>tryCatch</code> function. It will attempt to run an expression provided as argument, and will catch the error objects in case of failures and provide access to the internals of the error. Let’s look at it on the example of the previously defined function</p>
+<p>In R, a mechanism is implemented to give the programmer access to the error logs from the low level code. Errors are returned as <em>objects</em> of class <code>try-error</code> and can be handled through the <code>tryCatch</code> function. It will attempt to run an expression provided as argument, and will catch the error objects in case of failures and provide access to the internals of the error. Let’s look at it on the example of the previously defined function</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tryCatch</span>(</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">expr =</span> <span class="fu">square</span>(<span class="st">'3'</span>)</span>
@@ -289,7 +289,7 @@ cookieconsent.run({
  - attr(*, "class")= chr [1:3] "simpleWarning" "warning" "condition"</code></pre>
 </div>
 </div>
-<p>However, some errors might still arrise:</p>
+<p>However, some errors might still occur:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">square_better</span>(<span class="st">'r'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -297,8 +297,8 @@ cookieconsent.run({
 </div>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tryCatch</span>(</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">expr =</span> <span class="fu">square_better</span>(<span class="st">'r'</span>)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  ,<span class="at">error =</span> <span class="cf">function</span>(e)<span class="fu">str</span>(e)</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  ,<span class="at">warning =</span> <span class="cf">function</span>(w)<span class="fu">str</span>(w)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  ,<span class="at">error =</span> <span class="cf">function</span>(e) <span class="fu">str</span>(e)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  ,<span class="at">warning =</span> <span class="cf">function</span>(w) <span class="fu">str</span>(w)</span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>List of 2
@@ -307,6 +307,42 @@ cookieconsent.run({
  - attr(*, "class")= chr [1:3] "simpleWarning" "warning" "condition"</code></pre>
 </div>
 </div>
+<p>In this case, the input can not be converted to a type compatible with the operatino we want to perform, so in this case there is not much further to do, therefore, the function needs to stop in a safe way and notify the user of the problem. Stopping in a safe way means halting the execution of the program without compromising the provided data or the following steps.</p>
+<p>Let’s see what would be an optimal way to write this function:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>square_best <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">inherits</span>(x,<span class="st">'character'</span>)) {</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">warning</span>(<span class="st">'attempting to convert input to numeric'</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    x <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>(<span class="fu">as.numeric</span>(x)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>                  ,<span class="at">error =</span> \(e) <span class="fu">cat</span>(<span class="st">'error of execution, evaluation returned '</span>,e)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># ,warning = \(w) cat('warning during execution',w)</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>                  ,<span class="at">finally =</span> <span class="fu">print</span>(<span class="st">'execution problem in square_best'</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>                  )</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(x<span class="sc">**</span><span class="dv">2</span>)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="fu">square_best</span>(<span class="st">'r'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "execution problem in square_best"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NA</code></pre>
+</div>
+</div>
+<p>Here, we included a <code>tryCatch</code> call inside the function to respond to erroneous inputs. While if the input is good, no problems will be printed as the tryCatch call simply returns the desired value:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">square_best</span>(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 9</code></pre>
+</div>
+</div>
+<p>No error !</p>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>This post covers a good approach to building fault proof functions on the seemingly simple example of the squaring operation.</p>
 <!-- ```{r} -->
 <!-- x <- list(20, "20", c(1,2,"eoinrf","5nj4k"), "304", "4") -->
 <!-- typeof(x) -->
@@ -330,18 +366,15 @@ cookieconsent.run({
 <!-- parse(ex) -->
 <!-- eval(ex) -->
 <!-- ``` -->
-</section>
-<section id="writing-functions" class="level2">
-<h2 class="anchored" data-anchor-id="writing-functions">Writing functions</h2>
-<p>Let’s look at the output of the following operation, it is intentionally misused to raise an error message:</p>
-<p>One of the most important elements of any good software is it’s ability to put the user in a situation, where it is almost impossible to produce an error, and if an error still occurs somewhere, then the message associated to it should allow the user to straight away correct it.</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>addition <span class="ot">&lt;-</span> <span class="fu">functino</span>(x,y) {</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(x<span class="sc">+</span>y)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">addition</span>(<span class="dv">1</span>, <span class="st">"number"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<!-- ## Writing functions -->
+<!-- Let's look at the output of the following operation, it is intentionally misused to raise an error message: -->
+<!-- One of the most important elements of any good software is it's ability to put the user in a situation, where it is almost impossible to produce an error, and if an error still occurs somewhere, then the message associated to it should allow the user to straight away correct it. -->
+<!-- ```{r} -->
+<!-- addition <- functino(x,y) { -->
+<!--   return(x+y) -->
+<!-- } -->
+<!-- addition(1, "number") -->
+<!-- ``` -->
 </section>
 </section>
 <section id="sources" class="level1">

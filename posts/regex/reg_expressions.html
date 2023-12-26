@@ -221,7 +221,7 @@ cookieconsent.run({
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>This tutorial will introduce the basics of regular expressions, through some initial considerations and then concrete examples of varying difficulty.</p>
+<p>This tutorial will introduce the basics of regular expressions, through general considerations and then concrete examples of varying difficulty.</p>
 </section>
 <section id="regular-expressions" class="level1">
 <h1>Regular expressions</h1>
@@ -229,12 +229,12 @@ cookieconsent.run({
 <blockquote class="blockquote">
 <p>A regular expression (shortened as regex or regexp; sometimes referred to as rational expression) is a sequence of characters that specifies a search pattern in text. Usually such patterns are used by string-searching algorithms for “find” or “find and replace” operations on strings, or for input validation.</p>
 </blockquote>
-<p>This definition straight away frames out the types of problem we can handle with regexes. When faced with pure text, or a variable in a data frame that contains strings in which we are only looking for specific a information that we want to extract for further use, we might use regular expressions to solve this kind of problems.</p>
-<p>A regular expression will describe a sequence of characters, pretty much as detailed as one can imagine, that can then be targeted and extracted by the computer. Now let’s look at how to build a regular expression.</p>
+<p>This definition straight away frames out the types of problem we can handle with regexes. When faced with pure text, or a variable in a data frame that contains strings in which we are only looking for a specific information that to extract for further use; we might use regular expressions to solve this kind of problems.</p>
+<p>A regular expression will describe a sequence of characters, pretty much as detailed as one can imagine, that can then be targeted and extracted by the machine. Now let’s look at how to build a regular expression.</p>
 </section>
 <section id="building-regex-first-steps" class="level1">
 <h1>Building regex first steps</h1>
-<p>While this tutorial is in R, the formalism of regexes is pretty much similar across a range of languages and thus the details of ths tutorial hod valid.</p>
+<p>While this tutorial is in R, the formalism of a regex is pretty much the same across a range of languages and thus the details of this tutorial hold valid.</p>
 <p>Let’s imagine every possible character that can be contained in textual data, and start breaking it into categories.</p>
 <section id="categories-of-characters" class="level2">
 <h2 class="anchored" data-anchor-id="categories-of-characters">Categories of characters</h2>
@@ -351,7 +351,7 @@ cookieconsent.run({
 </section>
 <section id="examples" class="level1">
 <h1>Examples</h1>
-<p>We will be using the <a href="https://stringr.tidyverse.org"><em>stringr</em></a> package, part of the <a href="https://www.tidyverse.org"><em>tydiverse</em></a> ecosystem of package. You can also try using base R which is already pretty strong for manipulating strings and regexes. Let’s look at this list of examples we can use to test our newly acquired knowledge. Quite often you might need to work with dates or times, and they can happen to be collected in a way that’s pretty messy. You can imagine that you have all these corner cases that occur in your data and ou want to still be able to accurately get dates and times.</p>
+<p>We will be using the <a href="https://stringr.tidyverse.org"><em>stringr</em></a> package, part of the <a href="https://www.tidyverse.org"><em>tydiverse</em></a> ecosystem of package. You can also try using base R which is already pretty strong for manipulating strings and regexes. Let’s look at this list of examples we can use to test our newly acquired knowledge. Quite often you might need to work with dates or times, and they can happen to be collected in a messy way. You can imagine that you have all these corner cases that occur in your data and you want to still be able to accurately get dates and times.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>examples_dates <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"jlnsdc19/04/2022sjkscd"</span></span>
@@ -417,6 +417,7 @@ cookieconsent.run({
 <li><p><a href="https://towardsdatascience.com/regular-expressions-clearly-explained-with-examples-822d76b037b4">Medium post</a> by Jason Chong</p></li>
 <li><p><a href="https://regexpattern.com/regular-expression-cheatsheet/">regexpattern</a></p></li>
 <li><p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet">mozilla developers</a></p></li>
+<li><p><a href="https://docs.python.org/3/library/re.html">python docs</a></p></li>
 <li><p>Cheatsheet:</p>
 <ul>
 <li><a href="https://res.cloudinary.com/dyd911kmh/image/upload/v1665049611/Marketing/Blog/Regular_Expressions_Cheat_Sheet.pdf">datacamp</a></li>

@@ -235,7 +235,7 @@ cookieconsent.run({
 </section>
 <section id="type-of-database" class="level1">
 <h1>Type of database</h1>
-<p>There are several types of opensource data bases that all have great performances and functions. Some are better suited for certain tasks than other, and in this tutorial we will use PostgreSQL which is very good for all the regular operations on data sets, has a great set of packages that build the bridge with R, and also can be quite easily transformed into spatial databases for operations with geometries and coordinates, thanks to an extension called <a href="https://postgis.net">postgis</a>.</p>
+<p>There are several types of opensource data bases that all have great performances and functions. Some are better suited for certain tasks than other, and in this tutorial we will use PostgreSQL which is very good for all the regular operations on data sets, has a great set of packages that build the bridge with R, and also can be quite easily transformed into a spatial database for operations with geometries and coordinates, thanks to an extension called <a href="https://postgis.net">postgis</a>.</p>
 </section>
 <section id="packages" class="level1">
 <h1>Packages</h1>
@@ -253,16 +253,16 @@ cookieconsent.run({
 </section>
 <section id="installation" class="level1">
 <h1>Installation</h1>
-<p>This part of the tutorial is relevant for mac users, the steps to install postgres or sqlite on windows will be different. Every mac computer comes with SQLite preinstalled, you need, however to set up postgres by hand. The first step to do so is to install a package manager if not already done. On mac, homebrew is probably the most popular one, you can find the instructions on the <a href="https://brew.sh">website</a>. It takes only a few terminal commands to do so. Once it is installed, your R environment should be able to find it by itself.</p>
+<p>This part of the tutorial is relevant for mac users, the steps to install postgres or sqlite on windows will be different. Every mac computer comes with SQLite installed, you need, however to set up postgres by hand. The first step to do so is to install a package manager if not already done. On mac, homebrew is probably the most popular one, you can find the instructions on the <a href="https://brew.sh">brew website</a>. It takes only a few terminal commands to do so. Once it is installed, your R environment should be able to find it by itself.</p>
 <p>You can also check that the installation went well by entering the following command in the terminal:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">psql</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>This will open a postgres interface in the terminal, you can already do all the data base tasks you want in this window, however, some more user friendly software has been developed to access your postgres database such as <a href="https://eggerapps.at/postico2/">Postico</a> or for a much greater set of possibilities <a href="https://www.pgadmin.org">PgAdmin</a>. These softwares are usually refered to as <strong>clients</strong>, for more on this refer to <a href="https://wiki.postgresql.org/wiki/PostgreSQL_Clients">this</a> wiki for example.</p>
+<p>This will open a postgres interface in the terminal, you can already do all the data base tasks you want in this window, however, some more user friendly software has been developed to access your postgres database such as <a href="https://eggerapps.at/postico2/">Postico</a> or for a much greater set of possibilities <a href="https://www.pgadmin.org">PgAdmin</a>. These apps are usually reffered to as <em>clients</em>, for more on them refer to <a href="https://wiki.postgresql.org/wiki/PostgreSQL_Clients">this</a> wiki for example.</p>
 </section>
 <section id="database-set-up" class="level1">
 <h1>Database set-up</h1>
-<p>We now need to create the database that we will use to store and manipulate the data. For each R command to do something on the data base, a plain SQL command to be run through a database client or simply in the terminal will be shown. Since SQLite is by default present on mac machines, it is usually a bit easier to use, we will stick to postgres and for that will need to perform a first step in the terminal before. If you are using Rstudio, you can simply click on the terminal window, which usually is located right under the frame for text editing. Type this into the terminal <code>{bash} createdb test_db</code>. This will create the simplest database. In general, wou will want to add some constraints, such as a user, an administrator, and create a certain level of protection of your data base. These steps can be the topic of another tutorial, but for now, we will keep it simple. We now have a data base and can connect to it through R and through the terminal.</p>
+<p>We now need to create the database that we will use to store and manipulate the data. For each R command to do something on the data base, a plain SQL command to be run through a database client or simply in the terminal will be shown. Since SQLite is by default present on mac machines, it is usually a bit easier to use, we will stick to postgres and for that will need to perform a first step in the terminal before. If you are using Rstudio, you can simply click on the terminal window, which usually is located right under the frame for text editing. Type this into the terminal <code>{bash} createdb test_db</code>. This will create the simplest database. In general, you will want to add some constraints, such as a user, an administrator, and create a certain level of protection of your data base. These steps can be the topic of another tutorial, but for now, we will keep it simple. We now have a data base and can connect to it through R and through the terminal.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>con <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbConnect</span>(<span class="fu">PostgreSQL</span>()</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                      ,<span class="at">dbname =</span> <span class="st">"test_db"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -271,19 +271,26 @@ cookieconsent.run({
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dbListTables</span>(con) <span class="co"># it should work but return an empty character !!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>And in the terminal you can type <code>{bash} psql test_db</code> to access the database, you will notice your command line changing, and then type the meta command, which is proper to psql that shows you the tables in your db <code>\dt</code>.</p>
+<p>And in the terminal you can type <code>{bash} psql test_db</code> to access the database, you will notice your command line changing, and then type the meta command (notice the escape character <code>\</code> ), which is specific to psql that shows you the tables in your db <code>\dt</code>.</p>
 </section>
 <section id="data-set" class="level1">
 <h1>Data Set</h1>
-<p>Databases will prove particularly useful when data sets become increasingly big, and when we will only need a fraction of the data for our current analysis. Let’s choose a data set big enough to prove this point, but not to big either.</p>
+<p>Databases will prove particularly useful when data sets become increasingly big, when tables will be linked with each other through the variables they contain etc… And we will be able to load only a fraction of it into our environment to remain efficient. Let’s choose a data set big enough to prove this point, but not to big either.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>flows <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">"/Users/ivann/Documents/CASA_quant/data/wu03uk_tidy.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Let’s see the dimensions of the dataset:</p>
+<p>Go on and load any big table of your own alternatively ! Here is a list of websites with open source data sets for inspiration:</p>
+<ul>
+<li><a href="https://datasetsearch.research.google.com">https://datasetsearch.research.google.com</a></li>
+<li><a href="https://www.kaggle.com">https://www.kaggle.com</a></li>
+<li><a href="https://data.world">https://data.world</a></li>
+<li><a href="https://www.pangaea.de">https://www.pangaea.de</a></li>
+<li><a href="https://www.worldpop.org">https://www.worldpop.org</a></li>
+</ul>
+<p>Let’s see the dimensions of the data set:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(flows)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>it’s a pretty big data set !</p>
 </section>
 <section id="importing-data" class="level1">
 <h1>Importing data</h1>

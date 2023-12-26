@@ -2,22 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://ischlo.github.io/blog/posts/tennis_map/tennis_map.html</loc>
-    <lastmod>2023-11-12T20:37:10.966Z</lastmod>
+    <lastmod>2023-12-26T17:44:09.904Z</lastmod>
   </url>
   <url>
     <loc>https://ischlo.github.io/blog/posts/regex/reg_expressions.html</loc>
-    <lastmod>2023-11-12T20:37:12.323Z</lastmod>
+    <lastmod>2023-12-26T17:44:11.255Z</lastmod>
+  </url>
+  <url>
+    <loc>https://ischlo.github.io/blog/posts/error_handling/error_handling_r.html</loc>
+    <lastmod>2023-12-26T17:44:12.563Z</lastmod>
   </url>
   <url>
     <loc>https://ischlo.github.io/blog/posts/michelin_web_scrapping/michelin_data_engineering.html</loc>
-    <lastmod>2023-11-12T20:37:14.160Z</lastmod>
+    <lastmod>2023-12-26T17:44:13.306Z</lastmod>
   </url>
   <url>
     <loc>https://ischlo.github.io/blog/posts/fast_distance/fast_distance.html</loc>
-    <lastmod>2023-11-12T20:37:14.853Z</lastmod>
+    <lastmod>2023-12-26T17:44:14.044Z</lastmod>
   </url>
   <url>
     <loc>https://ischlo.github.io/blog/index.html</loc>
-    <lastmod>2023-11-12T20:37:16.899Z</lastmod>
+    <lastmod>2023-12-26T17:44:15.088Z</lastmod>
   </url>
 </urlset>
