@@ -3,6 +3,7 @@
     "listing": "/index.html",
     "items": [
       "/posts/tennis_map/tennis_map.html",
+      "/posts/spatial_index/spatial_index.html",
       "/posts/regex/reg_expressions.html",
       "/posts/error_handling/error_handling_r.html",
       "/posts/michelin_web_scrapping/michelin_data_engineering.html",
