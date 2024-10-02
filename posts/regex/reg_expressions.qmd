@@ -52,7 +52,7 @@ Let's imagine every possible character that can be contained in textual data, an
 The following table presents a non-exhaustive set of character categories:
 
 | Category                | Symbol         | Example   | Opposite             | Symbol  | Example   |
-|------------|------------|------------|------------|------------|------------|
+|-------------------------|----------------|-----------|----------------------|---------|-----------|
 | numbers                 | \\d            | 12387     | non-numbers          | \\D     | :-dfv\*   |
 | letters (lower case)    | \[a-z\]        | jsknvs    | letters (upper case) | \[A-Z\] | SDFVM     |
 | letters (lower & upper) | \[a-zA-Z\]     | fvFVDf    | \-                   | \-      | \-        |

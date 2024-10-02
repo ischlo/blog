@@ -66,7 +66,7 @@ In this case, the error occurs from within the system because it does not know h
 
 # Errors in R
 
-Being a very user friendly language, R does a lot in the background in order to make the user experience as comfortable as possible compared to other, mostly low level languages like C, C++, java etc... It resembles python in that sense. And a few other more modern languages that aim at being user friendly but also powerful, such as julia.
+Being a very user friendly language, R does a lot in the background in order to make the user experience as comfortable as possible compared to other, mostly low level languages like C, C++, java etc... It resembles python in that sense. And a few other more modern languages that aim at being user friendly but also powerful, such as *julia*.
 
 Additionally, R is typically good for functional programming, in the sense that a typical workflow will focus on the functions applied to data, as opposed to object oriented programming ([OOP](https://en.wikipedia.org/wiki/Object-oriented_programming)), where the focus is more on defining objects with their attributes, methods, instances and interactions with other objects. However, handling exceptions is one of those areas where it is helpful to bear OOP concepts in mind. Some more aspects of R as a OO language will be covered in a future blog post. Generally, when an error occurs in a programming workflow, there will be a mechanism stopping the execution of a script, followed by the printing of an error message to the console. During that process, an *error* object is created containing the error message that will be printed, but it can also contain additional information on the log.
 
@@ -77,7 +77,7 @@ In R, a mechanism is implemented to give the programmer access to the error logs
 ```{r eval=TRUE}
 tryCatch(
   expr = square('3')
-  ,error = function(e) str(e)# paste0('Raised error : ',e)
+  ,error = function(e) str(e)
   ,warning = function(w) w
 )
 
@@ -118,7 +118,7 @@ tryCatch(
 
 ```
 
-In this case, the input can not be converted to a type compatible with the operatino we want to perform, so in this case there is not much further to do, therefore, the function needs to stop in a safe way and notify the user of the problem. Stopping in a safe way means halting the execution of the program without compromising the provided data or the following steps. 
+In this case, the input can not be converted to a type compatible with the operation we want to perform, so there is not much further to do, therefore, the function needs to stop in a safe way and notify the user of the problem. Stopping in a safe way means halting the execution of the program without compromising the provided data or the following steps.
 
 Let's see what would be an optimal way to write this function:
 
@@ -129,7 +129,6 @@ square_best <- function(x){
     warning('attempting to convert input to numeric')
     x <- tryCatch(as.numeric(x)
                   ,error = \(e) cat('error of execution, evaluation returned ',e)
-                  # ,warning = \(w) cat('warning during execution',w)
                   ,finally = print('execution problem in square_best')
                   )
   }
@@ -153,7 +152,7 @@ No error !
 
 ## Conclusion
 
-This post covers a good approach to building fault proof functions on the seemingly simple example of the squaring operation.
+This post covers a basic example of a good approach to building fault proof functions on the example of the squaring operation.
 
 <!-- ```{r} -->
 
@@ -210,7 +209,9 @@ This post covers a good approach to building fault proof functions on the seemin
 <!-- ```{r} -->
 
 <!-- addition <- functino(x,y) { -->
+
 <!--   return(x+y) -->
+
 <!-- } -->
 
 <!-- addition(1, "number") -->
