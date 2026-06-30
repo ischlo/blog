@@ -1,0 +1,14 @@
+{
+  "last_release": "2026-05-20.0",
+  "last_run": "2026-05-31T22:41:00.369330+00:00",
+  "theme": "places",
+  "type": "place",
+  "bbox": {
+    "xmin": 2.15,
+    "ymin": 48.73,
+    "xmax": 2.6,
+    "ymax": 49.0
+  },
+  "backend": "geoparquet",
+  "output": "/Users/cenv1069/Documents/quarto_blog/posts/econ_pois/data/places.geoparquet"
+}

@@ -1,0 +1,103 @@
+---
+title: "Dimensionality reduction"
+author: "Ivann Schlosser"
+draft: true
+---
+
+```{r echo=FALSE}
+knitr::opts_chunk$set(echo = FALSE
+                      ,eval = TRUE
+                      ,include = TRUE)
+```
+
+## Introduction
+
+In this blog post I will talk about dimensionality reduction, more specifically it's use in visualisation, but I will try to give a general introduction to this fascinating technique that found applications across disciplines, starting from maths and physics, all the way to biology and these days machine learning and artificial intelligence.
+
+## A few examples from daily life
+
+We use dimensionality reduction ourselves everyday, probably without even noticing, simply because it's a fundamental abstraction of the physical or digital world that helps us understand it. The simple act of sorting out one's clothes after laundry and putting them back into predefined drawers is a form of dimensionality reduction. Imagine if after every laundry, your stuff was randomly thrown around the house and you had to search it through every time you needed something. Now this in itself is a dimensionality reduction, because instead of being thrown around your house, your stuff could be thrown around your neighbourhood and you would have to check all around when in need of a t-shirt. This is one extreme example of not using dimensionality reduction, on the other end, reducing dimensions to much can create a mess as well, imagine if after laundry you put all your stuff inside one single drawer. Sure, you would not need to look for it across your neighbourhood, but you would still need to go through every item inside the drawer to find the one specific you need, like your t-shirt.
+
+Another example from daily life, imagine you need to ask someone about something they have, say you want to go on a road trip and you are asking your friends if any of them have a car. Now there are dozens if not hundreds of different cars around, yet you will only reach out and ask 'do you have a car?'. You do not need to ask your friend about every car model currently on the roads until they reply 'yep, that's what I have'. You do not care about the car model, you simply care about it being a car that can get you somewhere you want to on a road trip. This might sound absurd at first, but it is a form of dimensionality reduction. You know there is a class of objects that do a specific action, in the case of cars it's driving you around, and you only care about this object in that respect. We are asking a question specific enough to solve our problem, but not to complicated to be redundant or irrelevant. Alternatively, if we ask our question to vaguely, our friend will not understand us, imagine if you asked 'do you have something we can sit in?'. Your friend would probably invite you other to their couch. 
+
+Lots of things start making sense when seen as a result of a dimensionality reduction process, but it needs to be applied carefully, so that there is just the right amount being done. It is also intimately linked to optimisation or the 'least-effort' principle, for example let's say you want to make a simple chair at smallest cost (time, money energy wise). How many legs do you need to put on this chair ? You could put 6 legs, and maybe it will be stronger and support heavier weights, but for the vast majority of applications, this will be to much, cost you extra time, effort and money to do. You could also put only two legs, but the chair will fall with whoever is sitting on it and therefore nobody will buy it. It turns out that 4 legs is the optimal number when building a chair, although from a mathematical point of view, you need only 3 points (legs) to set up a plane surface (where you will sit), but in the context of chair building, it is unstable enough, so that the cost of adding an extra leg was justified.
+
+It's all about finding the right tradeoffs, not loosing to much useful information, but reducing it to the bare minimum in order to achieve the desired result. 
+
+## Turning towards science
+
+Speaking of trade offs and reducing information, the most famous and important example of that is the Shanon diversity index. In his absolutely disrupting paper in 1947, Claude Shannon finds exactly that, he demonstrates that the minimum number of bits required to transmit a signal is equal to the entropy of the distribution of that signal. For example, if your signal contains only two element, say the letter 'a' and 'b', then 1 bit is enough, you can assign 1 to be 'a' and 0 to be 'b'. On the other end of the channel, the recipient will know this mapping and easily decode the signal. Even simpler, if your signal is only 'a', then you do not even need to encode it, as it is trivial and every time you will transmit something, the receiver will know it's an 'a'. Now as the signal gets more complicated, two aspects will be important, the number of distinct elements we want to communicate, and the relative proportion of each in the distribution. This way, you can assign less bits to encode the more frequently occurring elements. Why ? Because it will take less memory and be more efficient to transmit and decode. Say the letter 'a' is way more prevalent in your signal than the other letters, you can still assign a to the simple bit '1', and all the other less common letter to be '00','01','000','001' etc... But since they are less frequent, you care less about allocating more memory and size of the signal to transmit them. The trade of is that instead of sending a full sequence of bits every time you need to send an 'a', for example '00001', you can send only 1 and save on time, memory and compexity. And of course it makes more sense to do this with the element that is the most dominant in the distribution, the mode. The formal way to write it is:
+
+$$
+S = -\sum_{i=1}^N p_i \cdot log_2(p_i)
+$$
+
+where $p_i$ is the rate of observation of the element $i$ and there are $N$ different elements. Note the base $2$ of the logarithm, which has to do with the fact that we decompose the signal into a binary code, that takes only 2 values, 0 and 1.
+
+Now Shannon not only goes on and demonstrates this results, but he also finds that it is equivalent to the entropy defined by the famous physicist Boltzmann in thermodynamics. Where this exact formula (up to a constant), is applied to the number of configurations that the particles of a gas can take for a given energy of the system.
+
+$$
+S = k_B\cdot log(\Omega)
+$$
+
+The base of the logarithm loses it's importance here and $\Omega$ is the configuration of the gas. Hence the full name of that index, the Shannon entropy of information. To say that this is an important result is an understatement given how influential it has been on the field of computer science, signal processing, machine learning etc... And when you think of it, it takes its root in the dimensionality reduction principle. Boltzmans work helped describe the evolution of the state of a gas thanks to this equation, reducing the complexity from billions and billions of different particles that needed to be described individually in the classical approach, to basically 1 in the statistical physics approach. This leads us to another field in which dimensionality reduction is almost the essence of the discipline, it's physics ! Physicists throw pretty much all their efforts into reducing the dimensionality of a system at hand. This approach culminated in the work of such figures as Lagrange, Poincare, or Noether. And at the core of it are the symmetries of a system. A curvilinear trajectory in a 3D space could therefore be seen as a 1D trajectory in a constrained space. The constraints resulting from barriers in the form of other physical objects or fields of forces. Let's look at the example of simple circular motion at constant speed around a circle centered at 0 with a radius $R$. The figure below shows an example of 'screenshots' taken along the trajectory plotted in red:
+
+```{r eval=TRUE,include=TRUE,echo=FALSE}
+
+theta <- 1:12/12*2*pi
+R <- 5
+
+x <- R*cos(theta)
+y <- R*sin(theta)
+
+
+xlim <- c(-6,6)
+ylim <- c(-6,6)
+plot(x,y,type='p',asp = 1,xlim = xlim,ylim = ylim,axes=F,ann=FALSE)
+plotrix::draw.circle(0,0,5,density = 0,border='darkred')
+arrows(c(0,xlim[1]),c(ylim[1],0),c(0,xlim[2]),c(ylim[2],0),0.05)
+mtext('y',3,1,at=0,las=1,cex=0.8,family='serif'); ## y label
+mtext('x',4,1,at=0,las=1,cex=0.8,family='serif'); ## x label
+arrows(0,0,R*cos(pi/6),R*sin(pi/6),col='darkred',length = .2)
+text(2.5,1,expression(theta),col='darkred')
+text(5,2.5,expression(R),col='darkred')
+
+
+
+
+```
+
+This movement clearly takes place in a 2D environment, but the trajectory can actually be described with just a single curved line. What is the right variable to look at in this case ? It's the angle between one of the axis and the point the bject is at. Because once we know the angle, we can find the exact coordinates in the 2D plane with the following trigonometric relation: $(x,y)=(R\times cos(\theta),R\times sin(\theta))$, where $\theta$ is the angle, by convention taken to be from positive direction of the x-axis and increasing anticlockwise. The radius remains constant during the movement, therefore we can omit specifying it's variation (it's 0), and all of a sudden our 2D problem is reduced to 1D. In practice of course, the systems are way more complex, but the mindset of simplification remains the same.
+
+As you can see from this long introduction, the applications are vast and have had a pivotal role across science. Clearly, entire books can be dedicated to the study of dimensionality reduction across disciplines. In order to keep it as concise and useful, in this blog post I would like to focus on how to use dimensionality reduction for visualisations. It is relevant to any kind of activity involving this process, you ultimately want to visualise results and be able to extract meaningful information from an image. Often, you will use visualisation in order to communicate something complex and you will be faced with the challenge of selecting the right way to visualize. This is what we will talk more about in the following sections by considering different examples.
+
+Let's start with the basic histogram plot and what it tells us. Imagine we had to look at the actual data from which it is plotted:
+
+```{r}
+x <- rnorm(100,mean = 50,sd = 15) |> round()
+print(x)
+```
+
+Instead of the histogram:
+
+```{r}
+hist(x,breaks = 15,freq = FALSE,ylim = c(0,0.07), xlim = c(0,100))
+```
+
+In the first case, we would need to look at every element, see how it compares to the others, go on and try to estimate the data distribution from simply looking at these values. Now with the histogram, the work has already been done for us, and we can notice that the data could be normally distributed. We might now check that by plotting a few normal distributions on top:
+
+```{r}
+
+{
+  lwd <- 2
+  hist(x,breaks=15,freq = FALSE,ylim = c(0,0.07), xlim = c(0,100))
+  lines(1:100,dnorm(1:100,mean = 50,sd=25), col = 'darkred',lwd =lwd)
+  lines(1:100,dnorm(1:100,mean = 50,sd=15),col='darkblue',lwd =lwd)
+  lines(1:100,dnorm(1:100,mean = 50,sd=10),col='darkgreen',lwd =lwd)
+  legend(x=80,y=.05,col=c('darkred','darkblue','darkgreen'),lwd=lwd,legend = paste('sd','=',c(10,15,25),''))
+}
+
+
+```
+
+We see that the density function corresponding to a standard deviation of 15 (blue) seems to match well with our observation, so we choose a normal distribution with mean 50 and s.d. 15, by this process, we reduce our original vector of measures to only 2 parameters, mean and s.d., which not only is enough to know about the data, but can also allow us to generate synthetic observations for further experiments. Although it might seem trivial, but the simple fact of visualizing the data in a certain way helped us move forward with it and understand it's nature.

@@ -7,10 +7,10 @@ website:
       # - about.qmd
       - icon: github
         href: https://github.com/ischlo
-        # target: _blank
-      - icon: twitter
-        href: https://twitter.com/irscars
-        # target: _blank
+      # - icon: twitter
+      #   href: https://twitter.com/irscars
+      - icon: linkedin
+        href: https://www.linkedin.com/in/ivann-schlosser/
   
   cookie-consent: 
     type: 'implied'
